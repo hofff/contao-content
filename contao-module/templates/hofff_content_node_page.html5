@@ -1,0 +1,30 @@
+<?php
+
+use Hofff\Contao\Content\Util\ContaoUtil;
+
+$showLink = ContaoUtil::generateBackendIconLink(
+	[
+		'do'	=> 'article',
+		'pn'	=> $this->id,
+	],
+	'edit.gif',
+	$GLOBALS['TL_LANG']['hofff_content']['show_articles']
+);
+$editLink = ContaoUtil::generateBackendIconLink(
+	[
+		'do'	=> 'page',
+		'act'	=> 'edit',
+		'id'	=> $this->id,
+	],
+	'header.gif',
+	$GLOBALS['TL_LANG']['hofff_content']['edit_page']
+);
+
+?>
+
+<?php $this->extend('hofff_content_node'); ?>
+
+<?php $this->block('info'); ?>
+  <p><?= $showLink ?></p>
+  <p><?= $editLink ?></p>
+<?php $this->endblock(); ?>

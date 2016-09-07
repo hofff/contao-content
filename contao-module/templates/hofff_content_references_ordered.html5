@@ -1,0 +1,14 @@
+<ol class="<?= $this->class ?> block"<?= $this->cssID ?>
+    <?php if($this->style): ?>style="<?= $this->style ?>"<?php endif; ?>
+>
+  <?php foreach($this->renderers as $renderer): ?>
+    <?php $id = $renderer->getCSSID(); ?>
+    <li class="<?= $renderer->getCSSClasses() ?> block"
+        <?php if($id !== null): ?>id="<?= $id ?>"<?php endif; ?>
+    >
+      <?php $renderer->setCSSClasses(null); ?>
+      <?php $renderer->setCSSID(null); ?>
+      <?= $renderer ?>
+    </li>
+  <?php endforeach; ?>
+</ol>

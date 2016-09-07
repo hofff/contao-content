@@ -1,0 +1,58 @@
+{
+	"name": "hofff/contao-content",
+	"description": "Various content elements, modules and features to improve working with articles.",
+	"keywords": [
+		"module",
+		"content",
+		"insert-tags",
+		"article",
+		"contao"
+	],
+	"type": "contao-module",
+	"license": "LGPL-3.0+",
+	"homepage": "http://hofff.com/",
+	"authors": [
+		{
+			"name": "Oliver Hoff",
+			"email": "oliver@hofff.com",
+			"homepage": "http://hofff.com/",
+			"role": "Developer"
+		}
+	],
+	"support": {
+		"issues": "https://github.com/hofff/contao-content/issues",
+		"source": "https://github.com/hofff/contao-content"
+	},
+	"config": {
+		"preferred-install": "dist"
+	},
+	"minimum-stability": "dev",
+	"prefer-stable": true,
+	"require": {
+		"php": "^5.6 || ^7.0",
+		"contao/core": "^3.5",
+		"contao-community-alliance/composer-plugin": "^2.0",
+		"hofff/contao-selectri": "^4.0"
+	},
+	"require-dev": {
+		"hofff/contao-language-relations": "^2.0"
+	},
+	"suggest": {
+		"hofff/contao-language-relations": "Allows page references to be resolved into the current root page tree"
+	},
+	"autoload": {
+		"psr-4": {
+			"Hofff\\Contao\\Content\\": "src/"
+		}
+	},
+	"extra": {
+		"contao": {
+			"sources": {
+				"contao-module" : "system/modules/hofff_content"
+			},
+			"runonce": [
+				"runonce/dropViews.php"
+			]
+		}
+	}
+}

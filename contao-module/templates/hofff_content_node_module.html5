@@ -1,0 +1,22 @@
+<?php
+
+use Hofff\Contao\Content\Util\ContaoUtil;
+
+$editLink = ContaoUtil::generateBackendIconLink(
+	[
+		'do'	=> 'themes',
+		'table'	=> 'tl_module',
+		'act'	=> 'edit',
+		'id'	=> $this->id,
+	],
+	'header.gif',
+	$GLOBALS['TL_LANG']['hofff_content']['edit_module']
+);
+
+?>
+
+<?php $this->extend('hofff_content_node'); ?>
+
+<?php $this->block('info'); ?>
+  <p><?= $editLink ?></p>
+<?php $this->endblock(); ?>

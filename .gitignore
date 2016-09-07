@@ -1,0 +1,7 @@
+/*
+!/.gitignore
+!/contao-module/
+!/runonce/
+!/src/
+!/README.md
+!/composer.json

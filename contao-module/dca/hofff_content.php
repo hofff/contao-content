@@ -71,6 +71,7 @@ call_user_func(function() {
 			'sort'				=> true,
 			'canonical'			=> true,
 			'class'				=> 'hofff-content',
+			'suggestLimit'		=> 10,
 			'suggestionsLabel'	=> &$GLOBALS['TL_LANG']['hofff_content']['suggestions'],
 			'contentToggleable'	=> true,
 			'data'				=> null, // gets set by DCA builder

@@ -1,5 +1,7 @@
 (function($) {
 	window.addEvent("domready", function() {
+		if(!Hofff || !Hofff.Selectri) return;
+
 		$(document.body).addEvent("click:relay(a.hofff-content-edit)", function(event, $target) {
 			event.preventDefault();
 

@@ -73,7 +73,7 @@ class DCABuilder {
 		$factory->getConfig()->setParentKeyColumn('tpid');
 		$factory->getConfig()->setRootValue('page.0');
 		$factory->getConfig()->addSearchColumns('title');
-		$factory->getConfig()->setOrderByExpr('sorting, title');
+		$factory->getConfig()->setOrderByExpr('node_type = \'article\', sorting, title');
 		$factory->getConfig()->setIconCallback([ $this, 'generateNodeIcon' ]);
 		$factory->getConfig()->setLabelCallback([ $this, 'generateNodeLabel' ]);
 		$factory->getConfig()->setContentCallback([ $this, 'generateNodeContent' ]);

@@ -74,6 +74,10 @@ class RendererFactory {
 			}
 		}
 
+		if(!$renderers) {
+			return [];
+		}
+
 		ksort($renderers, SORT_NUMERIC);
 		$renderers = call_user_func_array('array_merge', $renderers);
 

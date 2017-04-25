@@ -123,7 +123,8 @@ class DCABuilder {
 			return [];
 		}
 
-		$sql = '(' . implode(') UNION (', $selects) . ') ORDER BY tstamp DESC LIMIT 20';
+		// FIXME workaround for https://github.com/contao/core-bundle/issues/792
+		$sql = 'SELECT * FROM ((' . implode(') UNION (', $selects) . ') ORDER BY tstamp DESC LIMIT 20) AS t';
 		$ids = Database::getInstance()->prepare($sql)->execute($params)->fetchEach('id');
 
 		return $ids;

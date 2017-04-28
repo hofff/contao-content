@@ -4,6 +4,7 @@ namespace Hofff\Contao\Content\Renderer;
 
 use Contao\ArticleModel;
 use Contao\ModuleArticle;
+use Contao\System;
 
 /**
  * @author Oliver Hoff <oliver@hofff.com>
@@ -110,7 +111,10 @@ class ArticleRenderer extends AbstractRenderer {
 		}
 
 		foreach($GLOBALS['TL_HOOKS']['getArticle'] as $callback) {
-			static::importStatic($callback[0])->{$callback[1]}($article);
+			call_user_func(
+				[ System::importStatic($callback[0]), $callback[1] ],
+				$article
+			);
 		}
 	}
 

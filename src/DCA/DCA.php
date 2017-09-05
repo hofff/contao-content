@@ -47,25 +47,30 @@ class DCA {
 				return $sections;
 			}
 
-			$sections = [];
-			$sections['header']	= true;
-			$sections['left']	= true;
-			$sections['right']	= true;
-			$sections['main']	= true;
-			$sections['footer']	= true;
-
-			$sql = 'SELECT sections FROM tl_layout WHERE sections != \'\'';
-			$layout = Database::getInstance()->query($sql);
-
-			while($layout->next()) {
-				$custom = array_filter(array_map('trim', explode(',', $layout->sections)), 'strlen');
-
-				foreach($custom as $section) {
-					$sections[$section] = true;
-				}
+			$defaultSections = [];
+			foreach([
+				'header',
+				'left',
+				'right',
+				'main',
+				'footer',
+			] as $section) {
+				$defaultSections[$section] = $GLOBALS['TL_LANG']['COLS'][$section];
 			}
 
-			$sections = array_keys($sections);
+			$sections = [];
+			$sql = 'SELECT sections FROM tl_layout WHERE sections != \'\'';
+			$layout = Database::getInstance()->query($sql);
+			while($layout->next()) {
+				$custom = deserialize($layout->sections, true);
+
+				foreach($custom as $section) {
+					$sections[$section['id']] = $section['title'];
+				}
+			}
+			asort($sections, SORT_LOCALE_STRING);
+
+			$sections = array_merge($defaultSections, $sections);
 
 			return $sections;
 		};

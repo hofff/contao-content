@@ -53,7 +53,6 @@ call_user_func(function() {
 		'label'				=> &$GLOBALS['TL_LANG']['hofff_content']['source_sections'],
 		'inputType'			=> 'checkbox',
 		'options_callback'	=> Hofff\Contao\Content\DCA\DCA::getLayoutSectionOptionsCallback(),
-		'reference'			=> &$GLOBALS['TL_LANG']['COLS'],
 		'eval'				=> [
 			'multiple'			=> true,
 			'tl_class'			=> 'clr',

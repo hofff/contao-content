@@ -57,8 +57,7 @@ class RendererFactory {
 				continue;
 			}
 
-			// FIXME workaround for https://github.com/contao/core-bundle/issues/792
-			$sql = 'SELECT * FROM ((' . implode(') UNION ALL (', $selects) . ')) AS t';
+			$sql = '(' . implode(') UNION ALL (', $selects) . ')';
 			$result = Database::getInstance()->prepare($sql)->execute($context->params[$type]);
 
 			while($result->next()) {

@@ -121,7 +121,7 @@ SQL;
 	 * @return boolean
 	 */
 	private static function hasView($view) {
-		return (bool) Database::getInstance()->prepare('SHOW VIEWS LIKE ?')->execute($view)->numRows;
+		return (bool) Database::getInstance()->prepare('SHOW TABLES LIKE ?')->execute($view)->numRows;
 	}
 
 }

@@ -94,7 +94,9 @@ class DCABuilder {
 
 		if(BE_USER_LOGGED_IN) {
 			$user = BackendUser::getInstance();
-			$user->isAdmin AND $user->pagemounts != NULL || $factory->getConfig()->setRoots(StringUtil::prefixEach($user->pagemounts, 'page.'));
+			if(!$user->isAdmin && $user->pagemounts !== false) {
+				$factory->getConfig()->setRoots(StringUtil::prefixEach($user->pagemounts, 'page.'));
+			}
 
 			if(!$this->hasAccessToFrontendModules()) {
 				$factory->getConfig()->setConditionExpr('node_type NOT IN (\'theme\', \'module\')');

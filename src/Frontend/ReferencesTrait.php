@@ -36,7 +36,11 @@ trait ReferencesTrait {
 		if(strlen($this->strTemplate)) {
 			$content = parent::generate();
 		} else {
-			$content = implode("\n", $this->renderers);
+			$content = [];
+			foreach($this->renderers as $renderer) {
+				$content[] = $renderer->render();
+			}
+			$content = implode("\n", $content);
 		}
 
 		if($this->hofff_content_exclude_from_search) {

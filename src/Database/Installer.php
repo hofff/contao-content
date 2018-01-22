@@ -15,9 +15,7 @@ class Installer {
 	 * @return void
 	 */
 	public function hookSQLCompileCommands($queries) {
-		$tables = array_flip(Database::getInstance()->listTables(null, true));
-
-		if(!isset($tables['hofff_content_tree'])) {
+		if(!self::hasView('hofff_content_tree')) {
 			$queries['ALTER_CHANGE'][] = StringUtil::tabsToSpaces($this->getTreeView());
 		}
 
@@ -116,6 +114,14 @@ FROM
 	AS module
 
 SQL;
+	}
+
+	/**
+	 * @param string $view
+	 * @return boolean
+	 */
+	private static function hasView($view) {
+		return (bool) Database::getInstance()->prepare('SHOW VIEWS LIKE ?')->execute($view)->numRows;
 	}
 
 }

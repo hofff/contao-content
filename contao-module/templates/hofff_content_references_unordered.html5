@@ -8,7 +8,7 @@
     >
       <?php $renderer->setCSSClasses(null); ?>
       <?php $renderer->setCSSID(null); ?>
-      <?= $renderer ?>
+      <?= $renderer->render() ?>
     </li>
   <?php endforeach; ?>
 </ul>

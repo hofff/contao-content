@@ -14,6 +14,7 @@ interface Renderer {
 
 	/**
 	 * @return string
+	 * @deprecated Use the render method instead
 	 */
 	public function __toString();
 

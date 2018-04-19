@@ -2,6 +2,6 @@
     <?php if($this->style): ?>style="<?= $this->style ?>"<?php endif; ?>
 >
   <?php foreach($this->renderers as $renderer): ?>
-    <?= $renderer ?>
+    <?= $renderer->render() ?>
   <?php endforeach; ?>
 </div>

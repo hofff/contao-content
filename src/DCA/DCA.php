@@ -5,6 +5,7 @@ namespace Hofff\Contao\Content\DCA;
 use Contao\Controller;
 use Contao\Database;
 use Contao\Image;
+use Contao\StringUtil;
 use Hofff\Contao\Content\Util\ContaoUtil;
 use Hofff\Contao\Selectri\Model\Node;
 
@@ -62,7 +63,7 @@ class DCA {
 			$sql = 'SELECT sections FROM tl_layout WHERE sections != \'\'';
 			$layout = Database::getInstance()->query($sql);
 			while($layout->next()) {
-				$custom = deserialize($layout->sections, true);
+				$custom = StringUtil::deserialize($layout->sections, true);
 
 				foreach($custom as $section) {
 					$sections[$section['id']] = $section['title'];

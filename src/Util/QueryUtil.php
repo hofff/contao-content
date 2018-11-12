@@ -2,6 +2,8 @@
 
 namespace Hofff\Contao\Content\Util;
 
+use Contao\Database;
+
 /**
  * @author Oliver Hoff <oliver@hofff.com>
  */
@@ -15,7 +17,7 @@ class QueryUtil {
 	 */
 	public static function query($sql, array $placeholders = null, array $params = null) {
 		$placeholders === null || $sql = vsprintf($sql, $placeholders);
-		return \Database::getInstance()->prepare($sql)->executeUncached($params);
+		return Database::getInstance()->prepare($sql)->executeUncached($params);
 	}
 
 	/**

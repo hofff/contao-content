@@ -1,11 +1,11 @@
 <?php
 
-namespace Hofff\Contao\Content;
+namespace Hofff\Contao\Content\EventListener;
 
 /**
  * @author Oliver Hoff <oliver@hofff.com>
  */
-class Hooks {
+class HookListener {
 
 	/**
 	 * @param object $row

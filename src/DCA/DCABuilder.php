@@ -6,8 +6,8 @@ use Contao\BackendUser;
 use Contao\Controller;
 use Contao\Database;
 use Contao\Image;
+use Contao\StringUtil as ContaoStringUtil;
 use Contao\System;
-use Contao\User;
 use Contao\Widget;
 use Hofff\Contao\Content\Util\ContaoUtil;
 use Hofff\Contao\Content\Util\QueryUtil;
@@ -255,7 +255,7 @@ SQL;
 
 		return sprintf(
 			'<div class="hofff-content-html" data-hofff-content-html="%s"></div>',
-			specialchars($content, false, true)
+			ContaoStringUtil::specialchars($content, false, true)
 		);
 	}
 

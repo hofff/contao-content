@@ -7,6 +7,7 @@ use Contao\Database;
 use Contao\Database\Result;
 use Contao\Model\Registry;
 use Contao\ModuleModel;
+use Contao\StringUtil;
 use Hofff\Contao\Content\Util\QueryUtil;
 use Hofff\Contao\LanguageRelations\LanguageRelations;
 use Hofff\Contao\Content\Util\Util;
@@ -27,7 +28,7 @@ class RendererFactory {
 		$context->params = [];
 		$context->column = $column;
 
-		$configs = array_values(deserialize($configs, true));
+		$configs = array_values(StringUtil::deserialize($configs, true));
 
 		foreach($configs as $i => $config) {
 			list($type) = explode('.', $config['_key'], 2);

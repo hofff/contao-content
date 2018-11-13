@@ -1,0 +1,19 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <services>
+        <defaults public="false" autoconfigure="false" autowire="false" />
+
+        <service id="Hofff\Contao\Content\Action\ContentReferencesAction">
+            <argument type="service" id="contao.security.token_checker" />
+            <tag name="contao.content_element" category="includes" type="hofff_content_references" renderer="esi" />
+        </service>
+
+        <service id="Hofff\Contao\Content\Action\ModuleReferencesAction">
+            <argument type="service" id="contao.security.token_checker" />
+            <tag name="contao.frontend_module" category="miscellaneous" type="hofff_content_references" renderer="esi" />
+        </service>
+    </services>
+</container>

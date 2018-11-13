@@ -20,7 +20,7 @@ class RendererFactory {
 	/**
 	 * @param array $configs
 	 * @param string $column
-	 * @return void
+	 * @return Renderer[]
 	 */
 	public static function createAll($configs, $column) {
 		$context = new \stdClass;

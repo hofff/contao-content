@@ -13,6 +13,11 @@ $GLOBALS['TL_LANG']['hofff_content']['exclude_from_search'][0]
 $GLOBALS['TL_LANG']['hofff_content']['exclude_from_search'][1]
 	= 'Schließt diese Elemente von der Contao-Suche aus.';
 
+$GLOBALS['TL_LANG']['hofff_content']['bypass_cache'][0]
+	= 'Seitencache umgehen';
+$GLOBALS['TL_LANG']['hofff_content']['bypass_cache'][1]
+	= 'Diese Elemente werden nicht im Seitencache gespeichert.';
+
 $GLOBALS['TL_LANG']['hofff_content']['render_container'][0]
 	= 'Artikelcontainer ausgeben';
 $GLOBALS['TL_LANG']['hofff_content']['render_container'][1]

@@ -13,6 +13,11 @@ $GLOBALS['TL_LANG']['hofff_content']['exclude_from_search'][0]
 $GLOBALS['TL_LANG']['hofff_content']['exclude_from_search'][1]
 	= 'Excludes these elements from the Contao website search.';
 
+$GLOBALS['TL_LANG']['hofff_content']['bypass_cache'][0]
+	= 'Bypass page cache';
+$GLOBALS['TL_LANG']['hofff_content']['bypass_cache'][1]
+	= 'Excludes these elements from the Contao page cache.';
+
 $GLOBALS['TL_LANG']['hofff_content']['render_container'][0]
 	= 'Render article container';
 $GLOBALS['TL_LANG']['hofff_content']['render_container'][1]

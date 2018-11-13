@@ -17,7 +17,6 @@ use Symfony\Component\HttpFoundation\Response;
 use function count;
 use function implode;
 use function is_array;
-use function var_dump;
 
 abstract class AbstractReferencesAction
 {

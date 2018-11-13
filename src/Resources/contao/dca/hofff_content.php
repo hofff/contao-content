@@ -2,7 +2,7 @@
 
 $GLOBALS['TL_DCA']['hofff_content']['palettes']['default']
 	= ';{hofff_content_legend},hofff_content_references'
-	. ';{template_legend},hofff_content_template,hofff_content_exclude_from_search';
+	. ';{template_legend},hofff_content_template,hofff_content_exclude_from_search,hofff_content_bypass_cache';
 
 call_user_func(function() {
 	$excludeFromSearch = [
@@ -140,7 +140,17 @@ $GLOBALS['TL_DCA']['hofff_content']['fields']['hofff_content_exclude_from_search
 	'exclude'				=> true,
 	'inputType'				=> 'checkbox',
 	'eval'					=> [
-		'tl_class'				=> 'w50 cbx m12',
+		'tl_class'				=> 'clr w50 cbx m12',
 	],
 	'sql'					=> 'char(1) NOT NULL default \'\'',
+];
+
+$GLOBALS['TL_DCA']['hofff_content']['fields']['hofff_content_bypass_cache'] = [
+    'label'					=> &$GLOBALS['TL_LANG']['hofff_content']['bypass_cache'],
+    'exclude'				=> true,
+    'inputType'				=> 'checkbox',
+    'eval'					=> [
+        'tl_class'				=> 'w50 cbx m12',
+    ],
+    'sql'					=> 'char(1) NOT NULL default \'\'',
 ];

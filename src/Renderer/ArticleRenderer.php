@@ -4,6 +4,7 @@ namespace Hofff\Contao\Content\Renderer;
 
 use Contao\ArticleModel;
 use Contao\ModuleArticle;
+use Contao\StringUtil;
 use Contao\System;
 
 /**
@@ -62,7 +63,22 @@ class ArticleRenderer extends AbstractRenderer {
 	 * @see \Hofff\Contao\Content\Renderer\AbstractRenderer::isValid()
 	 */
 	protected function isValid() {
-		return (bool) $this->getArticle();
+		if (!$this->getArticle()) {
+			return false;
+		}
+
+		if (!$GLOBALS['objPage'] || !$this->article->hofff_content_hide) {
+			return true;
+		}
+
+		$pageFilter = StringUtil::deserialize($this->article->hofff_page_filter, true);
+		$strategy   = $this->article->hofff_page_filter_strategy;
+
+		if (\in_array($GLOBALS['objPage']->id, $pageFilter)) {
+			return $strategy === 'whitelist';
+		}
+
+		return $strategy !== 'whitelist';
 	}
 
 	/**

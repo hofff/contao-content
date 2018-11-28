@@ -9,7 +9,7 @@ use Contao\CoreBundle\DataContainer\PaletteManipulator;
 
     $GLOBALS['TL_DCA']['tl_article']['palettes']['__selector__'][] = 'hofff_content_hide';
 
-    $GLOBALS['TL_DCA']['tl_article']['subpalettes']['hofff_content_hide'] = 'hofff_page_filter,hofff_page_filter_strategy';
+    $GLOBALS['TL_DCA']['tl_article']['subpalettes']['hofff_content_hide'] = 'hofff_content_page_filter,hofff_content_page_filter_strategy';
 
     $label                                 = &$GLOBALS['TL_DCA']['tl_article']['list']['label'];
     $label['label_callback_hofff_content'] = $label['label_callback'];
@@ -29,22 +29,22 @@ $GLOBALS['TL_DCA']['tl_article']['fields']['hofff_content_hide'] = [
     'sql'       => 'char(1) NOT NULL default \'\'',
 ];
 
-$GLOBALS['TL_DCA']['tl_article']['fields']['hofff_page_filter'] = [
-    'label'     => &$GLOBALS['TL_LANG']['tl_article']['hofff_page_filter'],
+$GLOBALS['TL_DCA']['tl_article']['fields']['hofff_content_page_filter'] = [
+    'label'     => &$GLOBALS['TL_LANG']['tl_article']['hofff_content_page_filter'],
     'exclude'   => true,
     'inputType' => 'pageTree',
     'eval'      => ['multiple' => true, 'fieldType' => 'checkbox'],
     'sql'       => 'blob NULL',
 ];
 
-$GLOBALS['TL_DCA']['tl_article']['fields']['hofff_page_filter_strategy'] = [
-    'label'            => &$GLOBALS['TL_LANG']['tl_article']['hofff_page_filter_strategy'],
+$GLOBALS['TL_DCA']['tl_article']['fields']['hofff_content_page_filter_strategy'] = [
+    'label'            => &$GLOBALS['TL_LANG']['tl_article']['hofff_content_page_filter_strategy'],
     'exclude'          => true,
     'default'          => 'blacklist',
     'inputType'        => 'select',
     'filter'           => true,
     'options'          => ['blacklist', 'whitelist'],
-    'references'       => &$GLOBALS['TL_LANG']['tl_article']['hofff_page_filter_strategies'],
+    'references'       => &$GLOBALS['TL_LANG']['tl_article']['hofff_content_page_filter_strategies'],
     'eval'             => ['tl_class' => 'w50'],
     'sql'              => "varchar(10) NOT NULL default ''",
 ];

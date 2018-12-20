@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace Hofff\Contao\Content\Action;
 
+use Contao\CoreBundle\Fragment\FragmentConfig;
+use Contao\CoreBundle\Fragment\FragmentPreHandlerInterface;
+use Contao\CoreBundle\Fragment\Reference\FragmentReference;
+use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\FrontendTemplate;
 use Contao\Model;
@@ -18,7 +22,7 @@ use function count;
 use function implode;
 use function is_array;
 
-abstract class AbstractReferencesAction
+abstract class AbstractReferencesAction implements FragmentPreHandlerInterface
 {
     /**
      * @var TokenChecker
@@ -31,16 +35,40 @@ abstract class AbstractReferencesAction
     private $responseTagger;
 
     /**
+     * @var ContaoFrameworkInterface
+     */
+    protected $contaoFramework;
+
+    /**
      * AbstractReferencesAction constructor.
      *
      * @param TokenChecker               $tokenChecker
+     * @param ContaoFrameworkInterface   $contaoFramework
      * @param SymfonyResponseTagger|null $responseTagger
      */
-    public function __construct(TokenChecker $tokenChecker, ?SymfonyResponseTagger $responseTagger = null)
-    {
+    public function __construct(
+        TokenChecker $tokenChecker,
+        ContaoFrameworkInterface $contaoFramework,
+        ?SymfonyResponseTagger $responseTagger = null
+    ) {
         $this->tokenChecker   = $tokenChecker;
         $this->responseTagger = $responseTagger;
+        $this->contaoFramework = $contaoFramework;
     }
+
+    public function preHandleFragment(FragmentReference $uri, FragmentConfig $config): void
+    {
+        $model = $this->loadModel($uri->attributes);
+        if (!$model) {
+            return;
+        }
+
+        if ($model->hofff_content_bypass_cache) {
+            $config->setRenderer('esi');
+        }
+    }
+
+    abstract protected function loadModel(array $attributes): ?Model;
 
     /**
      * @param Model          $model

@@ -8,12 +8,14 @@
 
         <service id="Hofff\Contao\Content\Action\ContentReferencesAction">
             <argument type="service" id="contao.security.token_checker" />
-            <tag name="contao.content_element" category="includes" type="hofff_content_references" renderer="esi" />
+            <argument type="service" id="contao.framework" />
+            <tag name="contao.content_element" category="includes" type="hofff_content_references" renderer="forward" />
         </service>
 
         <service id="Hofff\Contao\Content\Action\ModuleReferencesAction">
             <argument type="service" id="contao.security.token_checker" />
-            <tag name="contao.frontend_module" category="miscellaneous" type="hofff_content_references" renderer="esi" />
+            <argument type="service" id="contao.framework" />
+            <tag name="contao.frontend_module" category="miscellaneous" type="hofff_content_references" renderer="forward" />
         </service>
     </services>
 </container>

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Hofff\Contao\Content\Action;
 
 use Contao\ContentModel;
+use Contao\Model;
 use Contao\PageModel;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,5 +20,12 @@ final class ContentReferencesAction extends AbstractReferencesAction
         ?array $classes = null
     ): Response {
         return $this->createResponse($model, $section, $pageModel, (array) $classes);
+    }
+
+    protected function loadModel(array $attributes): ?Model
+    {
+        return $this->contaoFramework
+            ->getAdapter(ContentModel::class)
+            ->__call('findByPk', [$attributes['contentModel']]);
     }
 }

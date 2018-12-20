@@ -20,12 +20,12 @@ final class AddResponseTaggerPass implements CompilerPassInterface
 
         if ($container->hasDefinition(ContentReferencesAction::class)) {
             $definition = $container->getDefinition(ContentReferencesAction::class);
-            $definition->setArgument(1, new Reference('fos_http_cache.http.symfony_response_tagger'));
+            $definition->setArgument(2, new Reference('fos_http_cache.http.symfony_response_tagger'));
         }
 
         if ($container->hasDefinition(ModuleReferencesAction::class)) {
             $definition = $container->getDefinition(ModuleReferencesAction::class);
-            $definition->setArgument(1, new Reference('fos_http_cache.http.symfony_response_tagger'));
+            $definition->setArgument(2, new Reference('fos_http_cache.http.symfony_response_tagger'));
         }
     }
 }

@@ -70,7 +70,7 @@ abstract class AbstractReferencesAction
             $content = ContaoUtil::excludeFromSearch($content);
         }
 
-        $response = new Response($content);
+        $response = new Response(trim($content));
         $this->setCacheHeaders($response, $model, $pageModel);
         $this->tagResponse(['contao.db.' . $model::getTable() . '.' . $model->id]);
 

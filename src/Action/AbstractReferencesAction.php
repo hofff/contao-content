@@ -118,12 +118,7 @@ abstract class AbstractReferencesAction implements FragmentPreHandlerInterface
             $content = ContaoUtil::excludeFromSearch($content);
         }
 
-        if ($model->hofff_content_bypass_cache) {
-            $controllerAdapter = $this->contaoFramework->getAdapter(Controller::class);
-            $controllerAdapter->replaceInsertTags($content);
-            $controllerAdapter->replaceInsertTags($content, false);
-        }
-
+        $content = $this->replaceInsertTags($model, $content);
         $response = new Response($content);
         $this->setCacheHeaders($response, $model, $pageModel);
         $this->tagResponse(['contao.db.' . $model::getTable() . '.' . $model->id]);
@@ -251,4 +246,15 @@ abstract class AbstractReferencesAction implements FragmentPreHandlerInterface
 
         $this->responseTagger->addTags($tags);
     }
+
+    protected function replaceInsertTags(Model $model, string $content): string
+    {
+        if ($model->hofff_content_bypass_cache) {
+            $controllerAdapter = $this->contaoFramework->getAdapter(Controller::class);
+            $content           = $controllerAdapter->replaceInsertTags($content);
+            $content           = $controllerAdapter->replaceInsertTags($content, false);
+        }
+
+        return $content;
+}
 }

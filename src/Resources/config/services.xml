@@ -9,12 +9,16 @@
         <service id="Hofff\Contao\Content\Action\ContentReferencesAction">
             <argument type="service" id="contao.security.token_checker" />
             <argument type="service" id="contao.framework" />
+            <argument type="service" id="Netzmacht\Contao\PageContext\Request\PageContextFactory" />
+            <argument type="service" id="Netzmacht\Contao\PageContext\Request\PageContextInitializer" />
             <tag name="contao.content_element" category="includes" type="hofff_content_references" renderer="forward" />
         </service>
 
         <service id="Hofff\Contao\Content\Action\ModuleReferencesAction">
             <argument type="service" id="contao.security.token_checker" />
             <argument type="service" id="contao.framework" />
+            <argument type="service" id="Netzmacht\Contao\PageContext\Request\PageContextFactory" />
+            <argument type="service" id="Netzmacht\Contao\PageContext\Request\PageContextInitializer" />
             <tag name="contao.frontend_module" category="miscellaneous" type="hofff_content_references" renderer="forward" />
         </service>
     </services>

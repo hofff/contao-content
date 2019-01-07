@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hofff\Contao\Content\Action;
 
+use Contao\Controller;
 use Contao\CoreBundle\Fragment\FragmentConfig;
 use Contao\CoreBundle\Fragment\FragmentPreHandlerInterface;
 use Contao\CoreBundle\Fragment\Reference\FragmentReference;
@@ -17,6 +18,9 @@ use FOS\HttpCacheBundle\Http\SymfonyResponseTagger;
 use Hofff\Contao\Content\Renderer\Renderer;
 use Hofff\Contao\Content\Renderer\RendererFactory;
 use Hofff\Contao\Content\Util\ContaoUtil;
+use Netzmacht\Contao\PageContext\Request\PageContextFactory;
+use Netzmacht\Contao\PageContext\Request\PageContextInitializer;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use function count;
 use function implode;
@@ -40,20 +44,36 @@ abstract class AbstractReferencesAction implements FragmentPreHandlerInterface
     protected $contaoFramework;
 
     /**
+     * @var PageContextFactory
+     */
+    private $pageContextFactory;
+
+    /**
+     * @var PageContextInitializer
+     */
+    private $pageContextInitializer;
+
+    /**
      * AbstractReferencesAction constructor.
      *
      * @param TokenChecker               $tokenChecker
      * @param ContaoFrameworkInterface   $contaoFramework
+     * @param PageContextFactory         $pageContextFactory
+     * @param PageContextInitializer     $pageContextInitializer
      * @param SymfonyResponseTagger|null $responseTagger
      */
     public function __construct(
         TokenChecker $tokenChecker,
         ContaoFrameworkInterface $contaoFramework,
+        PageContextFactory $pageContextFactory,
+        PageContextInitializer $pageContextInitializer,
         ?SymfonyResponseTagger $responseTagger = null
     ) {
         $this->tokenChecker   = $tokenChecker;
         $this->responseTagger = $responseTagger;
         $this->contaoFramework = $contaoFramework;
+        $this->pageContextFactory = $pageContextFactory;
+        $this->pageContextInitializer = $pageContextInitializer;
     }
 
     public function preHandleFragment(FragmentReference $uri, FragmentConfig $config): void
@@ -98,11 +118,27 @@ abstract class AbstractReferencesAction implements FragmentPreHandlerInterface
             $content = ContaoUtil::excludeFromSearch($content);
         }
 
-        $response = new Response(trim($content));
+        if ($model->hofff_content_bypass_cache) {
+            $controllerAdapter = $this->contaoFramework->getAdapter(Controller::class);
+            $controllerAdapter->replaceInsertTags($content);
+            $controllerAdapter->replaceInsertTags($content, false);
+        }
+
+        $response = new Response($content);
         $this->setCacheHeaders($response, $model, $pageModel);
         $this->tagResponse(['contao.db.' . $model::getTable() . '.' . $model->id]);
 
         return $response;
+    }
+
+    protected function initializePageContext(Request $request, Model $model, ?PageModel $pageModel): void
+    {
+        if (!$model->hofff_content_bypass_cache || !$pageModel) {
+            return;
+        }
+
+        $pageContext = ($this->pageContextFactory)((int) $pageModel->id);
+        $this->pageContextInitializer->initialize($pageContext, $request);
     }
 
     /**

@@ -19,6 +19,8 @@ final class ContentReferencesAction extends AbstractReferencesAction
         ?PageModel $pageModel = null,
         ?array $classes = null
     ): Response {
+        $this->initializePageContext($request, $model, $pageModel);
+
         return $this->createResponse($model, $section, $pageModel, (array) $classes);
     }
 

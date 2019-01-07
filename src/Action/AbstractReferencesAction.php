@@ -111,8 +111,11 @@ abstract class AbstractReferencesAction implements FragmentPreHandlerInterface
                 $content[] = $renderer->render();
             }
 
-            $content = trim(implode("\n", $content));
+            $content = implode("\n", $content);
         }
+
+        // Trim whitespaces before ongoing processing.
+        $content = trim($content);
 
         if ($model->hofff_content_exclude_from_search) {
             $content = ContaoUtil::excludeFromSearch($content);

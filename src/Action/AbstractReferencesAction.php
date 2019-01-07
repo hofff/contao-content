@@ -91,7 +91,7 @@ abstract class AbstractReferencesAction implements FragmentPreHandlerInterface
                 $content[] = $renderer->render();
             }
 
-            $content = implode("\n", $content);
+            $content = trim(implode("\n", $content));
         }
 
         if ($model->hofff_content_exclude_from_search) {

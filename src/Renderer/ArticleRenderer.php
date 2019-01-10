@@ -74,6 +74,14 @@ class ArticleRenderer extends AbstractRenderer {
 		$pageFilter = StringUtil::deserialize($this->article->hofff_content_page_filter, true);
 		$strategy   = $this->article->hofff_content_page_filter_strategy;
 
+		if ($this->article->hofff_content_page_filter_inheritance) {
+			if (\array_intersect($GLOBALS['objPage']->trail, $pageFilter)) {
+				return $strategy === 'whitelist';
+			}
+
+			return $strategy !== 'whitelist';
+		}
+
 		if (\in_array($GLOBALS['objPage']->id, $pageFilter)) {
 			return $strategy === 'whitelist';
 		}

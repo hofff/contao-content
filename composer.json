@@ -46,7 +46,8 @@
 	},
 	"require-dev": {
 		"contao/manager-plugin": "^2.0",
-		"php-http/guzzle6-adapter": "^1.1"
+		"php-http/guzzle6-adapter": "^1.1",
+		"doctrine/coding-standard": "^5.0"
 	},
 	"suggest": {
 		"hofff/contao-language-relations": "Allows page references to be resolved into the current root page tree"

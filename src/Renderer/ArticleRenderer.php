@@ -3,6 +3,7 @@
 namespace Hofff\Contao\Content\Renderer;
 
 use Contao\ArticleModel;
+use Contao\Date;
 use Contao\ModuleArticle;
 use Contao\StringUtil;
 use Contao\System;
@@ -64,6 +65,14 @@ class ArticleRenderer extends AbstractRenderer {
 	 */
 	protected function isValid() {
 		if (!$this->getArticle()) {
+			return false;
+		}
+
+		$now = Date::floorToMinute();
+		if (!$this->article->published
+			|| ($this->article->start && $this->article->start > $now)
+			|| ($this->article->stop && $this->article->stop <= $now)
+		) {
 			return false;
 		}
 

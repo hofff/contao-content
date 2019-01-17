@@ -63,7 +63,7 @@ class ArticleRenderer extends AbstractRenderer {
 	/**
 	 * @see \Hofff\Contao\Content\Renderer\AbstractRenderer::isValid()
 	 */
-	protected function isValid() {
+	public function isValid(): bool {
 		if (!$this->getArticle()) {
 			return false;
 		}

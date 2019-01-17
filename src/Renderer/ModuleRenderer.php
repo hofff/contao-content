@@ -38,7 +38,7 @@ class ModuleRenderer extends AbstractRenderer {
 	/**
 	 * @return boolean
 	 */
-	protected function isValid() {
+	public function isValid(): bool {
 		return (bool) $this->getModule();
 	}
 

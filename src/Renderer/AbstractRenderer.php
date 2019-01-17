@@ -146,7 +146,7 @@ abstract class AbstractRenderer implements Renderer {
 	/**
 	 * @return boolean
 	 */
-	protected function isValid() {
+	public function isValid(): bool {
 		return true;
 	}
 

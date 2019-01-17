@@ -71,6 +71,10 @@ class RendererFactory {
 				);
 				$renderer->setColumn($column);
 
+				if (!$renderer->isValid()) {
+					continue;
+				}
+
 				$renderers[$i][] = $renderer;
 			}
 		}

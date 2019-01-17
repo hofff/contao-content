@@ -12,6 +12,8 @@ interface Renderer {
 	 */
 	public function render();
 
+	public function isValid(): bool;
+
 	/**
 	 * @return string
 	 * @deprecated Use the render method instead

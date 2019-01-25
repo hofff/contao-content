@@ -7,6 +7,7 @@ use Contao\Date;
 use Contao\ModuleArticle;
 use Contao\StringUtil;
 use Contao\System;
+use function defined;
 
 /**
  * @author Oliver Hoff <oliver@hofff.com>
@@ -75,6 +76,10 @@ class ArticleRenderer extends AbstractRenderer {
 		) {
 			return false;
 		}
+
+		if ($this->article->guests && defined('FE_USER_LOGGED_IN') && FE_USER_LOGGED_IN) {
+			return false;
+	 	}
 
 		if (!$GLOBALS['objPage'] || !$this->article->hofff_content_hide) {
 			return true;

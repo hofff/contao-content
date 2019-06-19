@@ -11,6 +11,8 @@
             <argument type="service" id="contao.framework" />
             <argument type="service" id="Netzmacht\Contao\PageContext\Request\PageContextFactory" />
             <argument type="service" id="Netzmacht\Contao\PageContext\Request\PageContextInitializer" />
+            <argument />
+            <argument type="service" id="request_stack" />
             <tag name="contao.content_element" category="includes" type="hofff_content_references" renderer="forward" />
         </service>
 
@@ -19,6 +21,8 @@
             <argument type="service" id="contao.framework" />
             <argument type="service" id="Netzmacht\Contao\PageContext\Request\PageContextFactory" />
             <argument type="service" id="Netzmacht\Contao\PageContext\Request\PageContextInitializer" />
+            <argument />
+            <argument type="service" id="request_stack" />
             <tag name="contao.frontend_module" category="miscellaneous" type="hofff_content_references" renderer="forward" />
         </service>
     </services>

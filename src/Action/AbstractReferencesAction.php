@@ -9,6 +9,7 @@ use Contao\CoreBundle\Fragment\FragmentConfig;
 use Contao\CoreBundle\Fragment\FragmentPreHandlerInterface;
 use Contao\CoreBundle\Fragment\Reference\FragmentReference;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\FrontendTemplate;
 use Contao\Model;
@@ -20,7 +21,9 @@ use Hofff\Contao\Content\Renderer\RendererFactory;
 use Hofff\Contao\Content\Util\ContaoUtil;
 use Netzmacht\Contao\PageContext\Request\PageContextFactory;
 use Netzmacht\Contao\PageContext\Request\PageContextInitializer;
+use Netzmacht\Contao\Toolkit\Routing\RequestScopeMatcher;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use function count;
 use function implode;
@@ -54,6 +57,11 @@ abstract class AbstractReferencesAction implements FragmentPreHandlerInterface
     private $pageContextInitializer;
 
     /**
+     * @var RequestStack
+     */
+    private $requestStack;
+
+    /**
      * AbstractReferencesAction constructor.
      *
      * @param TokenChecker               $tokenChecker
@@ -61,19 +69,22 @@ abstract class AbstractReferencesAction implements FragmentPreHandlerInterface
      * @param PageContextFactory         $pageContextFactory
      * @param PageContextInitializer     $pageContextInitializer
      * @param SymfonyResponseTagger|null $responseTagger
+     * @param RequestStack               $requestStack
      */
     public function __construct(
         TokenChecker $tokenChecker,
         ContaoFrameworkInterface $contaoFramework,
         PageContextFactory $pageContextFactory,
         PageContextInitializer $pageContextInitializer,
-        ?SymfonyResponseTagger $responseTagger = null
+        ?SymfonyResponseTagger $responseTagger = null,
+        RequestStack $requestStack
     ) {
-        $this->tokenChecker   = $tokenChecker;
-        $this->responseTagger = $responseTagger;
-        $this->contaoFramework = $contaoFramework;
-        $this->pageContextFactory = $pageContextFactory;
+        $this->tokenChecker           = $tokenChecker;
+        $this->responseTagger         = $responseTagger;
+        $this->contaoFramework        = $contaoFramework;
+        $this->pageContextFactory     = $pageContextFactory;
         $this->pageContextInitializer = $pageContextInitializer;
+        $this->requestStack           = $requestStack;
     }
 
     public function preHandleFragment(FragmentReference $uri, FragmentConfig $config): void
@@ -131,6 +142,10 @@ abstract class AbstractReferencesAction implements FragmentPreHandlerInterface
 
     protected function initializePageContext(Request $request, Model $model, ?PageModel $pageModel): void
     {
+        if ($this->requestStack->getMasterRequest() !== $request) {
+            return;
+        }
+
         if (!$model->hofff_content_bypass_cache || !$pageModel) {
             return;
         }

@@ -4,6 +4,7 @@ namespace Hofff\Contao\Content\Renderer;
 
 use Contao\ArticleModel;
 use Contao\Date;
+use Contao\FrontendUser;
 use Contao\ModuleArticle;
 use Contao\StringUtil;
 use Contao\System;
@@ -80,6 +81,22 @@ class ArticleRenderer extends AbstractRenderer {
 		if ($this->article->guests && defined('FE_USER_LOGGED_IN') && FE_USER_LOGGED_IN) {
 			return false;
 	 	}
+
+		if ($this->article->protected) {
+			if (defined('FE_USER_LOGGED_IN') && !FE_USER_LOGGED_IN) {
+				return false;
+			}
+
+			$user = FrontendUser::getInstance();
+			if (!\is_array($user->groups)) {
+				return false;
+			}
+
+			$groups = StringUtil::deserialize($this->article->groups);
+			if (empty($groups) || !\is_array($groups) || !\count(array_intersect($groups, $user->groups))) {
+				return false;
+			}
+		}
 
 		if (!$GLOBALS['objPage'] || !$this->article->hofff_content_hide) {
 			return true;

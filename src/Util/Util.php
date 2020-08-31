@@ -11,7 +11,8 @@ class Util {
 	 * @return boolean
 	 */
 	public static function isLanguageRelationsLoaded() {
-		return ContaoUtil::isModuleLoaded('hofff_language_relations');
+        return ContaoUtil::isModuleLoaded('HofffContaoContentBundle')
+            || ContaoUtil::isModuleLoaded('hofff_language_relations');
 	}
 
 }

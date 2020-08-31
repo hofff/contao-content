@@ -61,7 +61,7 @@
 		"contao-manager-plugin": "Hofff\\Contao\\Content\\ContaoManager\\Plugin",
 		"branch-alias": {
 			"dev-2.x": "2.1.x-dev",
-			"dev-3.x": "3.0.x-dev"
+			"dev-master": "3.0.x-dev"
 		}
 	}
 }

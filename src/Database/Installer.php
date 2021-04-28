@@ -16,7 +16,9 @@ class Installer {
 	 */
 	public function hookSQLCompileCommands($queries) {
 		if(!self::hasView('hofff_content_tree')) {
-			$queries['ALTER_CHANGE'][] = StringUtil::tabsToSpaces($this->getTreeView());
+			$sql = StringUtil::tabsToSpaces($this->getTreeView());
+			$hash = md5($sql);
+			$queries['ALTER_CHANGE'][$hash] = $sql;
 		}
 
 		return $queries;

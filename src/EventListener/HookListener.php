@@ -1,19 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Hofff\Contao\Content\EventListener;
 
-/**
- * @author Oliver Hoff <oliver@hofff.com>
- */
-class HookListener {
-
-	/**
-	 * @param object $row
-	 * @param boolean $visible
-	 * @return boolean
-	 */
-	public function isVisibleElement($row, $visible) {
-		return $visible && !$row->hofff_content_hide;
-	}
-
+class HookListener
+{
+    /**
+     * @param object $row
+     * @param bool   $visible
+     *
+     * @return bool
+     */
+    public function isVisibleElement($row, $visible)
+    {
+        return $visible && ! $row->hofff_content_hide;
+    }
 }

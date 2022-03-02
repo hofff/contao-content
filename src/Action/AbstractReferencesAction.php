@@ -8,8 +8,7 @@ use Contao\Controller;
 use Contao\CoreBundle\Fragment\FragmentConfig;
 use Contao\CoreBundle\Fragment\FragmentPreHandlerInterface;
 use Contao\CoreBundle\Fragment\Reference\FragmentReference;
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
-use Contao\CoreBundle\Routing\ScopeMatcher;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\FrontendTemplate;
 use Contao\Model;
@@ -21,59 +20,44 @@ use Hofff\Contao\Content\Renderer\RendererFactory;
 use Hofff\Contao\Content\Util\ContaoUtil;
 use Netzmacht\Contao\PageContext\Request\PageContextFactory;
 use Netzmacht\Contao\PageContext\Request\PageContextInitializer;
-use Netzmacht\Contao\Toolkit\Routing\RequestScopeMatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
+
 use function count;
+use function defined;
 use function implode;
 use function is_array;
+use function trim;
 
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.LongVariable)
+ */
 abstract class AbstractReferencesAction implements FragmentPreHandlerInterface
 {
-    /**
-     * @var TokenChecker
-     */
+    /** @var TokenChecker */
     private $tokenChecker;
 
-    /**
-     * @var SymfonyResponseTagger|null
-     */
+    /** @var SymfonyResponseTagger|null */
     private $responseTagger;
 
-    /**
-     * @var ContaoFrameworkInterface
-     */
+    /** @var ContaoFramework */
     protected $contaoFramework;
 
-    /**
-     * @var PageContextFactory
-     */
+    /** @var PageContextFactory */
     private $pageContextFactory;
 
-    /**
-     * @var PageContextInitializer
-     */
+    /** @var PageContextInitializer */
     private $pageContextInitializer;
 
-    /**
-     * @var RequestStack
-     */
+    /** @var RequestStack */
     private $requestStack;
 
-    /**
-     * AbstractReferencesAction constructor.
-     *
-     * @param TokenChecker               $tokenChecker
-     * @param ContaoFrameworkInterface   $contaoFramework
-     * @param PageContextFactory         $pageContextFactory
-     * @param PageContextInitializer     $pageContextInitializer
-     * @param SymfonyResponseTagger|null $responseTagger
-     * @param RequestStack               $requestStack
-     */
+    /** @SuppressWarnings(PHPMD.LongVariable) */
     public function __construct(
         TokenChecker $tokenChecker,
-        ContaoFrameworkInterface $contaoFramework,
+        ContaoFramework $contaoFramework,
         PageContextFactory $pageContextFactory,
         PageContextInitializer $pageContextInitializer,
         ?SymfonyResponseTagger $responseTagger = null,
@@ -90,24 +74,24 @@ abstract class AbstractReferencesAction implements FragmentPreHandlerInterface
     public function preHandleFragment(FragmentReference $uri, FragmentConfig $config): void
     {
         $model = $this->loadModel($uri->attributes);
-        if (!$model) {
+        if (! $model) {
             return;
         }
 
-        if ($model->hofff_content_bypass_cache) {
-            $config->setRenderer('esi');
+        if (! $model->hofff_content_bypass_cache) {
+            return;
         }
+
+        $config->setRenderer('esi');
     }
 
+    /** @param array<string,mixed> $attributes */
     abstract protected function loadModel(array $attributes): ?Model;
 
     /**
-     * @param Model          $model
-     * @param string         $section
-     * @param PageModel|null $pageModel
-     * @param array          $classes
+     * @param list<string> $classes
      *
-     * @return Response
+     * @SuppressWarnings(PHPMD.Superglobals)
      */
     protected function createResponse(Model $model, string $section, ?PageModel $pageModel, array $classes): Response
     {
@@ -132,7 +116,7 @@ abstract class AbstractReferencesAction implements FragmentPreHandlerInterface
             $content = ContaoUtil::excludeFromSearch($content);
         }
 
-        $content = $this->replaceInsertTags($model, $content);
+        $content  = $this->replaceInsertTags($model, $content);
         $response = new Response($content);
         $this->setCacheHeaders($response, $model, $pageModel);
         $this->tagResponse(['contao.db.' . $model::getTable() . '.' . $model->id]);
@@ -146,7 +130,7 @@ abstract class AbstractReferencesAction implements FragmentPreHandlerInterface
             return;
         }
 
-        if (!$model->hofff_content_bypass_cache || !$pageModel) {
+        if (! $model->hofff_content_bypass_cache || ! $pageModel) {
             return;
         }
 
@@ -155,10 +139,7 @@ abstract class AbstractReferencesAction implements FragmentPreHandlerInterface
     }
 
     /**
-     * @param Model  $model
-     * @param string $section
-     *
-     * @return array|Renderer[]
+     * @return Renderer[]
      */
     private function createRenderer(Model $model, string $section): array
     {
@@ -176,12 +157,10 @@ abstract class AbstractReferencesAction implements FragmentPreHandlerInterface
     /**
      * Parse the template.
      *
-     * @param Model            $model     Content model.
-     * @param array|Renderer[] $renderers Renderer.
-     * @param string           $section   Section name.
-     * @param array|null       $classes   Additional classes.
-     *
-     * @return string
+     * @param Model             $model     Content model.
+     * @param Renderer[]        $renderers Renderer.
+     * @param string            $section   Section name.
+     * @param list<string>|null $classes   Additional classes.
      */
     private function parseTemplate(
         Model $model,
@@ -197,7 +176,7 @@ abstract class AbstractReferencesAction implements FragmentPreHandlerInterface
 
         $data  = StringUtil::deserialize($model->cssID, true);
         $class = trim($model->hofff_content_template . ' ' . ($data[1] ?? ''));
-        $cssID = !empty($data[0]) ? ' id="' . $data[0] . '"' : '';
+        $cssID = ! empty($data[0]) ? ' id="' . $data[0] . '"' : '';
 
         if (is_array($classes) && count($classes) > 0) {
             $template->class .= ' ' . implode(' ', $classes);
@@ -217,10 +196,12 @@ abstract class AbstractReferencesAction implements FragmentPreHandlerInterface
         return $template->parse();
     }
 
+    /** @SuppressWarnings(PHPMD.CyclomaticComplexity) */
     private function setCacheHeaders(Response $response, Model $model, ?PageModel $pageModel): void
     {
-        if ($model->hofff_content_bypass_cache
-            || !$pageModel
+        if (
+            $model->hofff_content_bypass_cache
+            || ! $pageModel
             || (
                 ($pageModel->cache === false || $pageModel->cache < 1)
                 && ($pageModel->clientCache === false || $pageModel->clientCache < 1)
@@ -235,8 +216,9 @@ abstract class AbstractReferencesAction implements FragmentPreHandlerInterface
 
         // Do not cache the response if a user is logged in or the page is protected
         // TODO: Add support for proxies so they can vary on member context
-        if (FE_USER_LOGGED_IN === true
-            || BE_USER_LOGGED_IN === true
+        if (
+            (defined('FE_USER_LOGGED_IN') && FE_USER_LOGGED_IN === true)
+            || (defined('BE_USER_LOGGED_IN') && BE_USER_LOGGED_IN === true)
             || $pageModel->protected
             || $this->tokenChecker->hasBackendUser()
         ) {
@@ -251,14 +233,17 @@ abstract class AbstractReferencesAction implements FragmentPreHandlerInterface
             $response->setMaxAge((int) $pageModel->clientCache);
         }
 
-        if ($pageModel->cache > 0) {
-            $response->setSharedMaxAge((int) $pageModel->cache);
+        if ($pageModel->cache <= 0) {
+            return;
         }
+
+        $response->setSharedMaxAge((int) $pageModel->cache);
     }
 
+    /** @param list<string> $tags */
     protected function tagResponse(array $tags): void
     {
-        if (!$this->responseTagger) {
+        if (! $this->responseTagger) {
             return;
         }
 
@@ -274,5 +259,5 @@ abstract class AbstractReferencesAction implements FragmentPreHandlerInterface
         }
 
         return $content;
-}
+    }
 }

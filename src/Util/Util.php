@@ -1,18 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Hofff\Contao\Content\Util;
 
-/**
- * @author Oliver Hoff <oliver@hofff.com>
- */
-class Util {
-
-	/**
-	 * @return boolean
-	 */
-	public static function isLanguageRelationsLoaded() {
+class Util
+{
+    /**
+     * @return bool
+     */
+    public static function isLanguageRelationsLoaded()
+    {
+        /** @psalm-suppress DeprecatedMethod */
         return ContaoUtil::isModuleLoaded('HofffContaoContentBundle')
             || ContaoUtil::isModuleLoaded('hofff_language_relations');
-	}
-
+    }
 }

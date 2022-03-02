@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<psalm
+        errorLevel="3"
+        resolveFromConfigFile="true"
+        hideExternalErrors="true"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="https://getpsalm.org/schema/config"
+        xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
+>
+    <projectFiles>
+        <directory name="src"/>
+    </projectFiles>
+
+    <issueHandlers>
+        <DeprecatedClass>
+            <errorLevel type="suppress">
+                <!-- We need a new major version to get rid of it -->
+                <referencedClass name="Contao\ModuleLoader"/>
+                <referencedClass name="Contao\RequestToken"/>
+                <referencedClass name="Hofff\Contao\LanguageRelations\LanguageRelations"/>
+            </errorLevel>
+        </DeprecatedClass>
+        <DeprecatedMethod>
+            <errorLevel type="suppress">
+                <!-- We need a new major version to get rid of it -->
+                <referencedMethod name="Contao\ModuleLoader::getActive"/>
+            </errorLevel>
+        </DeprecatedMethod>
+        <InternalMethod>
+            <errorLevel type="suppress">
+                <referencedMethod name="Contao\CoreBundle\Framework\Adapter::__call"/>
+                <referencedMethod name="Contao\CoreBundle\Framework\ContaoFramework::getAdapter"/>
+            </errorLevel>
+        </InternalMethod>
+    </issueHandlers>
+
+    <universalObjectCrates>
+        <class name="Contao\ArticleModel"/>
+        <class name="Contao\Database\Result"/>
+        <class name="Contao\Model"/>
+        <class name="Contao\Template"/>
+        <class name="Contao\Widget"/>
+    </universalObjectCrates>
+
+<!--    <issueHandlers>-->
+<!--        <InternalMethod>-->
+<!--            <errorLevel type="suppress">-->
+<!--                <referencedMethod name="Contao\CoreBundle\Framework\Adapter::__call"/>-->
+<!--                <referencedMethod name="Contao\CoreBundle\Framework\ContaoFramework::initialize"/>-->
+<!--                <referencedMethod name="Contao\CoreBundle\Framework\ContaoFramework::createInstance"/>-->
+<!--                <referencedMethod name="Contao\CoreBundle\Framework\ContaoFramework::getAdapter"/>-->
+<!--            </errorLevel>-->
+<!--        </InternalMethod>-->
+<!--        <DeprecatedMethod>-->
+<!--            <errorLevel type="suppress">-->
+<!--                &lt;!&ndash; Required as long as we support doctrine/dbal ^2.11 | Contao 4.9 &ndash;&gt;-->
+<!--                <referencedMethod name="Doctrine\DBAL\Query\QueryBuilder::execute"/>-->
+<!--            </errorLevel>-->
+<!--        </DeprecatedMethod>-->
+<!--        <UndefinedDocblockClass>-->
+<!--            <errorLevel type="suppress">-->
+<!--                &lt;!&ndash; Depending if doctrine/dbal 2 or 3 is installed &ndash;&gt;-->
+<!--                <referencedClass name="Doctrine\DBAL\ForwardCompatibility\Result"/>-->
+<!--                <referencedClass name="Doctrine\DBAL\Result"/>-->
+<!--            </errorLevel>-->
+<!--        </UndefinedDocblockClass>-->
+<!--    </issueHandlers>-->
+
+<!--    <universalObjectCrates>-->
+<!--        <class name="Contao\BackendTemplate"/>-->
+<!--        <class name="Contao\FrontendTemplate"/>-->
+<!--        <class name="Contao\PageModel"/>-->
+<!--    </universalObjectCrates>-->
+</psalm>

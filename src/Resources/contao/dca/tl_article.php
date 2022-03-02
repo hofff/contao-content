@@ -1,15 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 use Contao\CoreBundle\DataContainer\PaletteManipulator;
 
-(function () {
+(static function (): void {
     PaletteManipulator::create()
         ->addField('hofff_content_hide', 'publish_legend', PaletteManipulator::POSITION_APPEND)
         ->applyToPalette('default', 'tl_article');
 
     $GLOBALS['TL_DCA']['tl_article']['palettes']['__selector__'][] = 'hofff_content_hide';
 
-    $GLOBALS['TL_DCA']['tl_article']['subpalettes']['hofff_content_hide'] = 'hofff_content_page_filter,hofff_content_page_filter_strategy,hofff_content_page_filter_inheritance';
+    $GLOBALS['TL_DCA']['tl_article']['subpalettes']['hofff_content_hide'] = 'hofff_content_page_filter'
+        . ',hofff_content_page_filter_strategy,hofff_content_page_filter_inheritance';
 
     $label                                 = &$GLOBALS['TL_DCA']['tl_article']['list']['label'];
     $label['label_callback_hofff_content'] = $label['label_callback'];

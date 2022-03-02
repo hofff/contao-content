@@ -12,12 +12,17 @@ use Hofff\Contao\Content\HofffContaoContentBundle;
 
 final class Plugin implements BundlePluginInterface
 {
+    /**
+     * {@inheritDoc}
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     public function getBundles(ParserInterface $parser): array
     {
         return [
             BundleConfig::create(HofffContaoContentBundle::class)
                 ->setLoadAfter([ContaoCoreBundle::class])
-                ->setReplace(['hofff_content'])
+                ->setReplace(['hofff_content']),
         ];
     }
 }

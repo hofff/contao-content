@@ -6,3 +6,6 @@
 !/src/
 !/README.md
 !/composer.json
+!/.phpcq.yaml.dist
+!/phpcs.xml.dist
+!/psalm.xml

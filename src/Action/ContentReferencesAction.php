@@ -24,6 +24,7 @@ final class ContentReferencesAction extends AbstractReferencesAction
         return $this->createResponse($model, $section, $pageModel, (array) $classes);
     }
 
+    /** @param array<string,mixed> $attributes */
     protected function loadModel(array $attributes): ?Model
     {
         return $this->contaoFramework

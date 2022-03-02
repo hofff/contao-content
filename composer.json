@@ -1,67 +1,74 @@
 {
-	"name": "hofff/contao-content",
-	"description": "Various content elements, modules and features to improve working with articles.",
-	"keywords": [
-		"module",
-		"content",
-		"insert-tags",
-		"article",
-		"contao"
-	],
-	"type": "contao-bundle",
-	"license": "LGPL-3.0-or-later",
-	"homepage": "http://hofff.com/",
-	"authors": [
-		{
-			"name": "Oliver Hoff",
-			"email": "oliver@hofff.com",
-			"homepage": "http://hofff.com/",
-			"role": "Developer"
-		},
-		{
-			"name": "David Molineus",
-			"email": "david@hofff.com",
-			"homepage": "https://hofff.com/",
-			"role": "Developer"
-		}
-	],
-	"support": {
-		"issues": "https://github.com/hofff/contao-content/issues",
-		"source": "https://github.com/hofff/contao-content"
-	},
-	"config": {
-		"preferred-install": "dist"
-	},
-	"minimum-stability": "dev",
-	"prefer-stable": true,
-	"require": {
-		"php": "^7.1",
-		"contao/core-bundle": "^4.6",
-		"hofff/contao-selectri": "^4.0",
-		"symfony/config": "^3.3 || ^4.0",
-		"symfony/dependency-injection": "^3.3 || ^4.0",
-		"symfony/http-foundation": "^3.3 || ^4.0",
-		"symfony/http-kernel": "^3.3 || ^4.0",
-		"netzmacht/contao-page-context": "^1.0"
-	},
-	"require-dev": {
-		"contao/manager-plugin": "^2.0",
-		"php-http/guzzle6-adapter": "^1.1",
-		"doctrine/coding-standard": "^5.0"
-	},
-	"suggest": {
-		"hofff/contao-language-relations": "Allows page references to be resolved into the current root page tree"
-	},
-	"autoload": {
-		"psr-4": {
-			"Hofff\\Contao\\Content\\": "src/"
-		}
-	},
-	"extra": {
-		"contao-manager-plugin": "Hofff\\Contao\\Content\\ContaoManager\\Plugin",
-		"branch-alias": {
-			"dev-2.x": "2.1.x-dev",
-			"dev-master": "3.0.x-dev"
-		}
-	}
+  "name": "hofff/contao-content",
+  "description": "Various content elements, modules and features to improve working with articles.",
+  "license": "LGPL-3.0-or-later",
+  "type": "contao-bundle",
+  "keywords": [
+    "module",
+    "content",
+    "insert-tags",
+    "article",
+    "contao"
+  ],
+  "authors": [
+    {
+      "name": "Oliver Hoff",
+      "email": "oliver@hofff.com",
+      "homepage": "http://hofff.com/",
+      "role": "Developer"
+    },
+    {
+      "name": "David Molineus",
+      "email": "david@hofff.com",
+      "homepage": "https://hofff.com/",
+      "role": "Developer"
+    }
+  ],
+  "homepage": "http://hofff.com/",
+  "support": {
+    "issues": "https://github.com/hofff/contao-content/issues",
+    "source": "https://github.com/hofff/contao-content"
+  },
+  "require": {
+    "php": "^7.1 || ^8.0",
+    "contao/core-bundle": "^4.9",
+    "hofff/contao-selectri": "^4.0",
+    "netzmacht/contao-page-context": "^1.0",
+    "symfony/config": "^3.3 || ^4.0",
+    "symfony/dependency-injection": "^3.3 || ^4.0",
+    "symfony/http-foundation": "^3.3 || ^4.0",
+    "symfony/http-kernel": "^3.3 || ^4.0"
+  },
+  "require-dev": {
+    "contao/manager-plugin": "^2.0",
+    "doctrine/coding-standard": "^9.0.",
+    "hofff/contao-language-relations": "^3.0",
+    "phpcq/runner-bootstrap": "^1.0@dev"
+  },
+  "suggest": {
+    "hofff/contao-language-relations": "Allows page references to be resolved into the current root page tree"
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "autoload": {
+    "psr-4": {
+      "Hofff\\Contao\\Content\\": "src/"
+    }
+  },
+  "config": {
+    "allow-plugins": {
+      "contao-components/installer": false,
+      "contao/manager-plugin": true,
+      "dealerdirect/phpcodesniffer-composer-installer": true,
+      "contao-community-alliance/composer-plugin": false
+    },
+    "preferred-install": "dist"
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-2.x": "2.1.x-dev",
+      "dev-master": "3.0.x-dev"
+    },
+    "contao-manager-plugin": "Hofff\\Contao\\Content\\ContaoManager\\Plugin"
+  }
 }

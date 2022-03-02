@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Hofff\Contao\Content\Renderer;
 
 use Contao\ArticleModel;
@@ -9,151 +11,175 @@ use Contao\Model\Registry;
 use Contao\ModuleModel;
 use Contao\StringUtil;
 use Hofff\Contao\Content\Util\QueryUtil;
-use Hofff\Contao\LanguageRelations\LanguageRelations;
 use Hofff\Contao\Content\Util\Util;
+use Hofff\Contao\LanguageRelations\LanguageRelations;
+use stdClass;
 
-/**
- * @author Oliver Hoff <oliver@hofff.com>
- */
-class RendererFactory {
+use function array_filter;
+use function array_merge;
+use function array_values;
+use function assert;
+use function call_user_func;
+use function call_user_func_array;
+use function explode;
+use function implode;
+use function ksort;
+use function method_exists;
+use function trim;
+use function ucfirst;
 
-	/**
-	 * @param array $configs
-	 * @param string $column
-	 * @return Renderer[]
-	 */
-	public static function createAll($configs, $column) {
-		$context = new \stdClass;
-		$context->selects = [];
-		$context->params = [];
-		$context->column = $column;
+use const SORT_NUMERIC;
 
-		$configs = array_values(StringUtil::deserialize($configs, true));
+/** @SuppressWarnings(PHPMD.CouplingBetweenObjects) */
+class RendererFactory
+{
+    /**
+     * @param list<array<string,mixed>> $configs
+     * @param string                    $column
+     *
+     * @return Renderer[]
+     */
+    public static function createAll($configs, $column)
+    {
+        $context          = new stdClass();
+        $context->selects = [];
+        $context->params  = [];
+        $context->column  = $column;
 
-		foreach($configs as $i => $config) {
-			list($type) = explode('.', $config['_key'], 2);
+        $configs = array_values(StringUtil::deserialize($configs, true));
 
-			$method = 'add' . ucfirst($type) . 'Select';
-			if(!method_exists(self::class, $method)) {
-				continue;
-			}
+        foreach ($configs as $i => $config) {
+            [$type] = explode('.', $config['_key'], 2);
 
-			call_user_func(
-				[ self::class, $method ],
-				$context,
-				$config,
-				$i
-			);
-		}
+            $method = 'add' . ucfirst($type) . 'Select';
+            if (! method_exists(self::class, $method)) {
+                continue;
+            }
 
-		$renderers = [];
-		foreach($context->selects as $type => $selects) {
-			$method = 'create' . ucfirst($type) . 'Renderer';
-			if(!method_exists(self::class, $method)) {
-				continue;
-			}
+            call_user_func(
+                [self::class, $method],
+                $context,
+                $config,
+                $i
+            );
+        }
 
-			$selects = array_filter($selects);
-			if(!$selects) {
-				continue;
-			}
+        $renderers = [];
+        foreach ($context->selects as $type => $selects) {
+            $method = 'create' . ucfirst($type) . 'Renderer';
+            if (! method_exists(self::class, $method)) {
+                continue;
+            }
 
-			$sql = '(' . implode(') UNION ALL (', $selects) . ')';
-			$result = Database::getInstance()->prepare($sql)->execute($context->params[$type]);
+            $selects = array_filter($selects);
+            if (! $selects) {
+                continue;
+            }
 
-			while($result->next()) {
-				$i = $result->hofff_content_index;
+            $sql    = '(' . implode(') UNION ALL (', $selects) . ')';
+            $result = Database::getInstance()->prepare($sql)->execute($context->params[$type] ?? []);
 
-				$renderer = call_user_func(
-					[ self::class, $method ],
-					$result,
-					$configs[$i]
-				);
-				$renderer->setColumn($column);
+            while ($result->next()) {
+                $i = $result->hofff_content_index;
 
-				if (!$renderer->isValid()) {
-					continue;
-				}
+                $renderer = call_user_func(
+                    [self::class, $method],
+                    $result,
+                    $configs[$i]
+                );
+                $renderer->setColumn($column);
 
-				$renderers[$i][] = $renderer;
-			}
-		}
+                if (! $renderer->isValid()) {
+                    continue;
+                }
 
-		if(!$renderers) {
-			return [];
-		}
+                $renderers[$i][] = $renderer;
+            }
+        }
 
-		ksort($renderers, SORT_NUMERIC);
-		$renderers = call_user_func_array('array_merge', $renderers);
+        if (! $renderers) {
+            return [];
+        }
 
-		return $renderers;
-	}
+        ksort($renderers, SORT_NUMERIC);
+        $renderers = call_user_func_array('array_merge', $renderers);
 
-	/**
-	 * @param Result $result
-	 * @param array $config
-	 * @return ArticleRenderer
-	 */
-	protected static function createArticleRenderer(Result $result, array $config) {
-		$article = Registry::getInstance()->fetch('tl_article', $result->id);
-		$article || $article = new ArticleModel($result);
+        return $renderers;
+    }
 
-		$renderer = new ArticleRenderer;
-		$renderer->setArticle($article);
-		$renderer->setRenderContainer($config['render_container']);
+    /**
+     * @param array<string,mixed> $config
+     *
+     * @return ArticleRenderer
+     */
+    protected static function createArticleRenderer(Result $result, array $config)
+    {
+        $article             = Registry::getInstance()->fetch('tl_article', $result->id);
+        $article || $article = new ArticleModel($result);
+        assert($article instanceof ArticleModel);
 
-		self::configureAbstractRenderer($renderer, $config);
+        $renderer = new ArticleRenderer();
+        $renderer->setArticle($article);
+        $renderer->setRenderContainer($config['render_container']);
 
-		return $renderer;
-	}
+        self::configureAbstractRenderer($renderer, $config);
 
-	/**
-	 * @param Result $result
-	 * @param array $config
-	 * @return ModuleRenderer
-	 */
-	protected static function createModuleRenderer(Result $result, array $config) {
-		$module = Registry::getInstance()->fetch('tl_module', $result->id);
-		$module || $module= new ModuleModel($result);
+        return $renderer;
+    }
 
-		$renderer = new ModuleRenderer;
-		$renderer->setModule($module);
+    /**
+     * @param array<string,mixed> $config
+     *
+     * @return ModuleRenderer
+     */
+    protected static function createModuleRenderer(Result $result, array $config)
+    {
+        $module            = Registry::getInstance()->fetch('tl_module', $result->id);
+        $module || $module = new ModuleModel($result);
+        assert($module instanceof ModuleModel);
 
-		self::configureAbstractRenderer($renderer, $config);
+        $renderer = new ModuleRenderer();
+        $renderer->setModule($module);
 
-		return $renderer;
-	}
+        self::configureAbstractRenderer($renderer, $config);
 
-	/**
-	 * @param AbstractRenderer $renderer
-	 * @param array $config
-	 * @return void
-	 */
-	protected static function configureAbstractRenderer(AbstractRenderer $renderer, array $config) {
-		$renderer->setExcludeFromSearch($config['exclude_from_search']);
-		$renderer->setCSSClasses(trim($config['css_classes']));
-		$renderer->setCSSID(trim($config['css_id']));
-	}
+        return $renderer;
+    }
 
-	/**
-	 * @param \stdClass $context
-	 * @param array $config
-	 * @param integer $i
-	 * @return void
-	 */
-	protected static function addArticleSelect(\stdClass $context, array $config, $i) {
-		list(, $id) = explode('.', $config['_key'], 2);
+    /**
+     * @param array<string,mixed> $config
+     *
+     * @return void
+     */
+    protected static function configureAbstractRenderer(AbstractRenderer $renderer, array $config)
+    {
+        $renderer->setExcludeFromSearch($config['exclude_from_search']);
+        $renderer->setCSSClasses(trim($config['css_classes']));
+        $renderer->setCSSID(trim($config['css_id']));
+    }
 
-		$context->params['article'][] = $i;
-		$context->params['article'][] = $id;
+    /**
+     * @param array<string,mixed> $config
+     * @param int                 $index
+     *
+     * @return void
+     *
+     * @SuppressWarnings(PHPMD.LongVariable)
+     */
+    protected static function addArticleSelect(stdClass $context, array $config, $index)
+    {
+        [, $articleId] = explode('.', $config['_key'], 2);
 
-		$targetSectionCondition = '';
-		if($config['target_section_filter']) {
-			$targetSectionCondition = 'AND article.inColumn = ?';
-			$context->params['article'][] = $context->column;
-		}
+        $context->params['article'][] = $index;
+        $context->params['article'][] = $articleId;
 
-		$context->selects['article'][] = <<<SQL
+        $targetSectionCondition = '';
+        if ($config['target_section_filter']) {
+            $targetSectionCondition       = 'AND article.inColumn = ?';
+            $context->params['article'][] = $context->column;
+        }
+
+        $context->selects['article'][] = <<<SQL
 SELECT
 	?			AS hofff_content_index,
 	article.*
@@ -164,40 +190,44 @@ WHERE
 	article.id = ?
 $targetSectionCondition
 SQL;
-	}
+    }
 
-	/**
-	 * @param \stdClass $context
-	 * @param array $config
-	 * @param integer $i
-	 * @return void
-	 */
-	protected static function addPageSelect(\stdClass $context, array $config, $i) {
-		list(, $id) = explode('.', $config['_key'], 2);
+    /**
+     * @param array<string,mixed> $config
+     * @param int                 $index
+     *
+     * @return void
+     *
+     * @SuppressWarnings(PHPMD.Superglobals)
+     * @SuppressWarnings(PHPMD.LongVariable)
+     */
+    protected static function addPageSelect(stdClass $context, array $config, $index)
+    {
+        [, $pageId] = explode('.', $config['_key'], 2);
 
-		if($config['translate'] && $GLOBALS['objPage'] && Util::isLanguageRelationsLoaded()) {
-			$root = $GLOBALS['objPage']->rootId;
-			$relations = LanguageRelations::getRelations($id);
-			$id = $relations[$root] ?: $id;
-		}
+        if ($config['translate'] && $GLOBALS['objPage'] && Util::isLanguageRelationsLoaded()) {
+            $root      = $GLOBALS['objPage']->rootId;
+            $relations = LanguageRelations::getRelations((int) $pageId);
+            $pageId    = $relations[$root] ?: $pageId;
+        }
 
-		$context->params['article'][] = $i;
-		$context->params['article'][] = $id;
+        $context->params['article'][] = $index;
+        $context->params['article'][] = $pageId;
 
-		$targetSectionCondition = '';
-		if($config['target_section_filter']) {
-			$targetSectionCondition = 'AND article.inColumn = ?';
-			$context->params['article'][] = $context->column;
-		}
+        $targetSectionCondition = '';
+        if ($config['target_section_filter']) {
+            $targetSectionCondition       = 'AND article.inColumn = ?';
+            $context->params['article'][] = $context->column;
+        }
 
-		$sourceSectionCondition = '';
-		if(!empty($config['source_sections'])) {
-			$wildcards = QueryUtil::wildcards($config['source_sections']);
-			$sourceSectionCondition = 'AND article.inColumn IN (' . $wildcards . ')';
-			$context->params['article'] = array_merge($context->params['article'], $config['source_sections']);
-		}
+        $sourceSectionCondition = '';
+        if (! empty($config['source_sections'])) {
+            $wildcards                  = QueryUtil::wildcards($config['source_sections']);
+            $sourceSectionCondition     = 'AND article.inColumn IN (' . $wildcards . ')';
+            $context->params['article'] = array_merge($context->params['article'], $config['source_sections']);
+        }
 
-		$context->selects['article'][] = <<<SQL
+        $context->selects['article'][] = <<<SQL
 SELECT
 	?			AS hofff_content_index,
 	article.*
@@ -211,21 +241,22 @@ $sourceSectionCondition
 ORDER BY
 	article.sorting
 SQL;
-	}
+    }
 
-	/**
-	 * @param \stdClass $context
-	 * @param array $config
-	 * @param integer $i
-	 * @return void
-	 */
-	protected static function addModuleSelect(\stdClass $context, array $config, $i) {
-		list(, $id) = explode('.', $config['_key'], 2);
+    /**
+     * @param array<string,mixed> $config
+     * @param int                 $index
+     *
+     * @return void
+     */
+    protected static function addModuleSelect(stdClass $context, array $config, $index)
+    {
+        [, $moduleId] = explode('.', $config['_key'], 2);
 
-		$context->params['module'][] = $i;
-		$context->params['module'][] = $id;
+        $context->params['module'][] = $index;
+        $context->params['module'][] = $moduleId;
 
-		$context->selects['module'][] = <<<SQL
+        $context->selects['module'][] = <<<SQL
 SELECT
 	?			AS hofff_content_index,
 	module.*
@@ -235,6 +266,5 @@ FROM
 WHERE
 	module.id = ?
 SQL;
-	}
-
+    }
 }

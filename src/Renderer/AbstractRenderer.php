@@ -1,217 +1,233 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Hofff\Contao\Content\Renderer;
 
 use Hofff\Contao\Content\Util\ContaoUtil;
 
-/**
- * @author Oliver Hoff <oliver@hofff.com>
- */
-abstract class AbstractRenderer implements Renderer {
+use function strlen;
+use function trim;
 
-	/**
-	 * @var array
-	 */
-	private static $renderStack = [];
+abstract class AbstractRenderer implements Renderer
+{
+    /** @var array<string,bool> */
+    private static $renderStack = [];
 
-	/**
-	 * @var string
-	 */
-	private $column;
+    /** @var string */
+    private $column;
 
-	/**
-	 * @var boolean
-	 */
-	private $excludeFromSearch;
+    /** @var bool */
+    private $excludeFromSearch;
 
-	/**
-	 * @var string|null
-	 */
-	private $cssClasses;
+    /** @var string|null */
+    private $cssClasses;
 
-	/**
-	 * @var string|null
-	 */
-	private $cssID;
+    /** @var string|null */
+    private $cssID;
 
-	/**
-	 */
-	protected function __construct() {
-		$this->column = 'main';
-		$this->excludeFromSearch = false;
-	}
+    protected function __construct()
+    {
+        $this->column            = 'main';
+        $this->excludeFromSearch = false;
+    }
 
-	/**
-	 * @see \Hofff\Contao\Content\Renderer\Renderer::getColumn()
-	 */
-	public function getColumn() {
-		return $this->column;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    public function getColumn()
+    {
+        return $this->column;
+    }
 
-	/**
-	 * @see \Hofff\Contao\Content\Renderer\Renderer::setColumn()
-	 */
-	public function setColumn($column) {
-		$this->column = (string) $column;
-	}
+    /**
+     * {@inheritDoc}
+     *
+     * @psalm-suppress RedundantCastGivenDocblockType
+     */
+    public function setColumn($column)
+    {
+        $this->column = (string) $column;
+    }
 
-	/**
-	 * @see \Hofff\Contao\Content\Renderer\Renderer::getExcludeFromSearch()
-	 */
-	public function getExcludeFromSearch() {
-		return $this->excludeFromSearch;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    public function getExcludeFromSearch()
+    {
+        return $this->excludeFromSearch;
+    }
 
-	/**
-	 * @see \Hofff\Contao\Content\Renderer\Renderer::setExcludeFromSearch()
-	 */
-	public function setExcludeFromSearch($exclude) {
-		$this->excludeFromSearch = (bool) $exclude;
-	}
+    /**
+     * {@inheritDoc}
+     *
+     * @psalm-suppress RedundantCastGivenDocblockType
+     */
+    public function setExcludeFromSearch($exclude)
+    {
+        $this->excludeFromSearch = (bool) $exclude;
+    }
 
-	/**
-	 * @see \Hofff\Contao\Content\Renderer\Renderer::getCSSClasses()
-	 */
-	public function getCSSClasses() {
-		return $this->cssClasses;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    public function getCSSClasses()
+    {
+        return $this->cssClasses;
+    }
 
-	/**
-	 * @see \Hofff\Contao\Content\Renderer\Renderer::setCSSClasses()
-	 */
-	public function setCSSClasses($classes) {
-		$this->cssClasses = $classes === null || !strlen($classes) ? null : (string) $classes;
-	}
+    /**
+     * {@inheritDoc}
+     *
+     * @psalm-suppress RedundantCastGivenDocblockType
+     */
+    public function setCSSClasses($classes)
+    {
+        $this->cssClasses = $classes === null || ! strlen($classes) ? null : (string) $classes;
+    }
 
-	/**
-	 * @see \Hofff\Contao\Content\Renderer\Renderer::addCSSClasses()
-	 */
-	public function addCSSClasses($classes) {
-		if($classes === null || !strlen($classes)) {
-			return;
-		}
+    /**
+     * {@inheritDoc}
+     *
+     * @psalm-suppress RedundantCastGivenDocblockType
+     */
+    public function addCSSClasses($classes)
+    {
+        if ($classes === null || ! strlen($classes)) {
+            return;
+        }
 
-		if($this->cssClasses === null) {
-			$this->cssClasses = (string) $classes;
-			return;
-		}
+        if ($this->cssClasses === null) {
+            $this->cssClasses = (string) $classes;
 
-		$this->cssClasses .= ' ' . $classes;
-	}
+            return;
+        }
 
-	/**
-	 * @see \Hofff\Contao\Content\Renderer\Renderer::getCSSID()
-	 */
-	public function getCSSID() {
-		return $this->cssID;
-	}
+        $this->cssClasses .= ' ' . $classes;
+    }
 
-	/**
-	 * @see \Hofff\Contao\Content\Renderer\Renderer::setCSSID()
-	 */
-	public function setCSSID($id) {
-		$this->cssID = $id === null || !strlen($id) ? null : (string) $id;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    public function getCSSID()
+    {
+        return $this->cssID;
+    }
 
-	/**
-	 * @see \Hofff\Contao\Content\Renderer\Renderer::render()
-	 */
-	public function render() {
-		if(!$this->isValid()) {
-			return '';
-		}
+    /**
+     * {@inheritDoc}
+     *
+     * @psalm-suppress RedundantCastGivenDocblockType
+     */
+    public function setCSSID($cssId)
+    {
+        $this->cssID = $cssId === null || ! strlen($cssId) ? null : (string) $cssId;
+    }
 
-		if(!$this->pushStack()) {
-			return '';
-		}
+    /**
+     * {@inheritDoc}
+     */
+    public function render()
+    {
+        if (! $this->isValid()) {
+            return '';
+        }
 
-		$content = $this->doRender();
+        if (! $this->pushStack()) {
+            return '';
+        }
 
-		if($this->shouldExcludeFromSearch()) {
-			$content = ContaoUtil::excludeFromSearch($content);
-		}
+        $content = $this->doRender();
 
-		$this->popStack();
+        if ($this->shouldExcludeFromSearch()) {
+            $content = ContaoUtil::excludeFromSearch($content);
+        }
 
-		return $content;
-	}
+        $this->popStack();
 
-	/**
-	 * @see \Hofff\Contao\Content\Renderer\Renderer::__toString()
-	 */
-	public function __toString() {
-		return $this->render();
-	}
+        return $content;
+    }
 
-	/**
-	 * @return boolean
-	 */
-	public function isValid(): bool {
-		return true;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    public function __toString()
+    {
+        return $this->render();
+    }
 
-	/**
-	 * @return string
-	 */
-	protected abstract function getCacheKey();
+    public function isValid(): bool
+    {
+        return true;
+    }
 
-	/**
-	 * @return string
-	 */
-	protected abstract function doRender();
+    /**
+     * @return string
+     */
+    abstract protected function getCacheKey();
 
-	/**
-	 * @return boolean
-	 */
-	protected function shouldExcludeFromSearch() {
-		return $this->getExcludeFromSearch() || $this->isProtected();
-	}
+    /**
+     * @return string
+     */
+    abstract protected function doRender();
 
-	/**
-	 * @return boolean
-	 */
-	protected function isProtected() {
-		return false;
-	}
+    /**
+     * @return bool
+     */
+    protected function shouldExcludeFromSearch()
+    {
+        return $this->getExcludeFromSearch() || $this->isProtected();
+    }
 
-	/**
-	 * @param object $element
-	 * @return void
-	 */
-	protected function applyCSSClassesAndID($element) {
-		$classes = $this->getCSSClasses();
-		$id = $this->getCSSID();
+    /**
+     * @return bool
+     */
+    protected function isProtected()
+    {
+        return false;
+    }
 
-		if($classes === null && $id === null) {
-			return;
-		}
+    /**
+     * @param object $element
+     *
+     * @return void
+     */
+    protected function applyCSSClassesAndID($element)
+    {
+        $classes = $this->getCSSClasses();
+        $cssId   = $this->getCSSID();
 
-		$css = $element->cssID;
+        if ($classes === null && $cssId === null) {
+            return;
+        }
 
-		$classes === null || $css[1] = trim($classes . ' ' . $css[1]);
-		$id === null || $css[0] = $id;
+        $css = $element->cssID;
 
-		$element->cssID = $css;
-	}
+        $classes === null || $css[1] = trim($classes . ' ' . $css[1]);
+        $cssId === null || $css[0]   = $cssId;
 
-	/**
-	 * @return boolean
-	 */
-	private function pushStack() {
-		$key = $this->getCacheKey();
+        $element->cssID = $css;
+    }
 
-		if(isset(self::$renderStack[$key])) {
-			return false;
-		}
+    /**
+     * @return bool
+     */
+    private function pushStack()
+    {
+        $key = $this->getCacheKey();
 
-		return self::$renderStack[$key] = true;
-	}
+        if (isset(self::$renderStack[$key])) {
+            return false;
+        }
 
-	/**
-	 * @return void
-	 */
-	private function popStack() {
-		unset(self::$renderStack[$this->getCacheKey()]);
-	}
+        return self::$renderStack[$key] = true;
+    }
 
+    /**
+     * @return void
+     */
+    private function popStack()
+    {
+        unset(self::$renderStack[$this->getCacheKey()]);
+    }
 }

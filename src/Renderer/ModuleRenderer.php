@@ -1,66 +1,71 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Hofff\Contao\Content\Renderer;
 
 use Contao\ModuleModel;
 
-/**
- * @author Oliver Hoff <oliver@hofff.com>
- */
-class ModuleRenderer extends AbstractRenderer {
+class ModuleRenderer extends AbstractRenderer
+{
+    /** @var ModuleModel|null */
+    private $module;
 
-	/**
-	 * @var ModuleModel
-	 */
-	private $module;
+    public function __construct()
+    {
+        parent::__construct();
+    }
 
-	/**
-	 */
-	public function __construct() {
-		parent::__construct();
-	}
+    /**
+     * @return ModuleModel|null
+     */
+    public function getModule()
+    {
+        return $this->module;
+    }
 
-	/**
-	 * @return ModuleModel
-	 */
-	public function getModule() {
-		return $this->module;
-	}
+    /**
+     * @return void
+     */
+    public function setModule(ModuleModel $module)
+    {
+        $this->module = $module;
+    }
 
-	/**
-	 * @param ModuleModel $module
-	 * @return void
-	 */
-	public function setModule(ModuleModel $module) {
-		$this->module = $module;
-	}
+    public function isValid(): bool
+    {
+        return (bool) $this->getModule();
+    }
 
-	/**
-	 * @return boolean
-	 */
-	public function isValid(): bool {
-		return (bool) $this->getModule();
-	}
+    /**
+     * @return string
+     */
+    protected function getCacheKey()
+    {
+        if ($this->module === null) {
+            return self::class;
+        }
 
-	/**
-	 * @return string
-	 */
-	protected function getCacheKey() {
-		return self::class . $this->getModule()->id;
-	}
+        return self::class . $this->module->id;
+    }
 
-	/**
-	 * @return string
-	 */
-	protected function doRender() {
-		return '';
-	}
+    /**
+     * @return string
+     */
+    protected function doRender()
+    {
+        return '';
+    }
 
-	/**
-	 * @see \Hofff\Contao\Content\Renderer\AbstractRenderer::isProtected()
-	 */
-	protected function isProtected() {
-		return $this->getModule()->protected;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    protected function isProtected()
+    {
+        if ($this->module === null) {
+            return false;
+        }
 
+        return (bool) $this->module->protected;
+    }
 }

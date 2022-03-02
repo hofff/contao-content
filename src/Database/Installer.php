@@ -1,34 +1,38 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Hofff\Contao\Content\Database;
 
 use Contao\Database;
 use Hofff\Contao\Content\Util\StringUtil;
 
-/**
- * @author Oliver Hoff <oliver@hofff.com>
- */
-class Installer {
+use function md5;
 
-	/**
-	 * @param array $queries
-	 * @return void
-	 */
-	public function hookSQLCompileCommands($queries) {
-		if(!self::hasView('hofff_content_tree')) {
-			$sql = StringUtil::tabsToSpaces($this->getTreeView());
-			$hash = md5($sql);
-			$queries['ALTER_CHANGE'][$hash] = $sql;
-		}
+class Installer
+{
+    /**
+     * @param array<string,array<string,string>> $queries
+     *
+     * @return array<string,array<string,string>>
+     */
+    public function hookSQLCompileCommands($queries)
+    {
+        if (! self::hasView('hofff_content_tree')) {
+            $sql                            = StringUtil::tabsToSpaces($this->getTreeView());
+            $hash                           = md5($sql);
+            $queries['ALTER_CHANGE'][$hash] = $sql;
+        }
 
-		return $queries;
-	}
+        return $queries;
+    }
 
-	/**
-	 * @return string
-	 */
-	protected function getTreeView() {
-		return <<<SQL
+    /**
+     * @return string
+     */
+    protected function getTreeView()
+    {
+        return <<<SQL
 CREATE OR REPLACE VIEW hofff_content_tree AS
 
 SELECT
@@ -116,14 +120,15 @@ FROM
 	AS module
 
 SQL;
-	}
+    }
 
-	/**
-	 * @param string $view
-	 * @return boolean
-	 */
-	private static function hasView($view) {
-		return (bool) Database::getInstance()->prepare('SHOW TABLES LIKE ?')->execute($view)->numRows;
-	}
-
+    /**
+     * @param string $view
+     *
+     * @return bool
+     */
+    private static function hasView($view)
+    {
+        return (bool) Database::getInstance()->prepare('SHOW TABLES LIKE ?')->execute($view)->numRows;
+    }
 }

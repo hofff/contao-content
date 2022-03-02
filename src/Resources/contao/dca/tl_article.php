@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Contao\CoreBundle\DataContainer\PaletteManipulator;
+use Hofff\Contao\Content\DCA\ArticleDCA;
 
 (static function (): void {
     PaletteManipulator::create()
@@ -16,7 +17,7 @@ use Contao\CoreBundle\DataContainer\PaletteManipulator;
 
     $label                                 = &$GLOBALS['TL_DCA']['tl_article']['list']['label'];
     $label['label_callback_hofff_content'] = $label['label_callback'];
-    $label['label_callback']               = ['Hofff\\Contao\\Content\\DCA\\ArticleDCA', 'labelCallback'];
+    $label['label_callback']               = [ArticleDCA::class, 'labelCallback'];
     unset($label);
 }
 )();

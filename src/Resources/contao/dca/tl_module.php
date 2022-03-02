@@ -2,8 +2,10 @@
 
 declare(strict_types=1);
 
+use Hofff\Contao\Content\DCA\DCABuilder;
+
 call_user_func(static function (): void {
-    $builder = new Hofff\Contao\Content\DCA\DCABuilder();
+    $builder = new DCABuilder();
     $builder->setPaletteTemplate(
         '{title_legend},name,type'
         . '%s'

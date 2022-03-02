@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 
+use Hofff\Contao\Content\DCA\DCA;
+use Hofff\Contao\Content\Util\Util;
+
 $GLOBALS['TL_DCA']['hofff_content']['palettes']['default']
     = ';{hofff_content_legend},hofff_content_references'
     . ';{template_legend},hofff_content_template,hofff_content_exclude_from_search,hofff_content_bypass_cache';
@@ -36,7 +39,7 @@ call_user_func(static function (): void {
         'label'     => &$GLOBALS['TL_LANG']['hofff_content']['translate'],
         'inputType' => 'checkbox',
         'eval'      => [
-            'tl_class'  => Hofff\Contao\Content\Util\Util::isLanguageRelationsLoaded()
+            'tl_class'  => Util::isLanguageRelationsLoaded()
                 ? 'w50 cbx m12'
                 : 'hidden',
         ],
@@ -44,7 +47,7 @@ call_user_func(static function (): void {
     $sourceSections      = [
         'label'             => &$GLOBALS['TL_LANG']['hofff_content']['source_sections'],
         'inputType'         => 'checkbox',
-        'options_callback'  => Hofff\Contao\Content\DCA\DCA::getLayoutSectionOptionsCallback(),
+        'options_callback'  => DCA::getLayoutSectionOptionsCallback(),
         'eval'              => [
             'multiple'          => true,
             'tl_class'          => 'clr',
@@ -70,8 +73,8 @@ call_user_func(static function (): void {
         'sql'               => 'blob NULL',
         'nodeTypes'         => [
             'article'           => [
-                'icon_callback'     => [ 'Hofff\\Contao\\Content\\DCA\\DCA', 'getArticleIcon' ],
-                'label_callback'    => [ 'Hofff\\Contao\\Content\\DCA\\DCA', 'getArticleLabel' ],
+                'icon_callback'     => [DCA::class, 'getArticleIcon' ],
+                'label_callback'    => [DCA::class, 'getArticleLabel' ],
                 'template'          => 'hofff_content_node_article',
                 'fields'            => [
                     'exclude_from_search'   => $excludeFromSearch,
@@ -82,7 +85,7 @@ call_user_func(static function (): void {
                 ],
             ],
             'page'              => [
-                'icon_callback'     => [ 'Hofff\\Contao\\Content\\DCA\\DCA', 'getPageIcon' ],
+                'icon_callback'     => [DCA::class, 'getPageIcon' ],
                 'template'          => 'hofff_content_node_page',
                 'fields'            => [
                     'exclude_from_search'   => $excludeFromSearch,
@@ -96,7 +99,7 @@ call_user_func(static function (): void {
             'theme'             => ['icon' => 'themes.gif'],
             'module'            => [
                 'icon'              => 'modules.gif',
-                'label_callback'    => [ 'Hofff\\Contao\\Content\\DCA\\DCA', 'getModuleLabel' ],
+                'label_callback'    => [DCA::class, 'getModuleLabel' ],
                 'template'          => 'hofff_content_node_module',
                 'fields'            => [
                     'exclude_from_search'   => $excludeFromSearch,
@@ -112,7 +115,7 @@ $GLOBALS['TL_DCA']['hofff_content']['fields']['hofff_content_template'] = [
     'label'                 => &$GLOBALS['TL_LANG']['hofff_content']['template'],
     'exclude'               => true,
     'inputType'             => 'select',
-    'options_callback'      => Hofff\Contao\Content\DCA\DCA::getTemplateGroupOptionsCallback(
+    'options_callback'      => DCA::getTemplateGroupOptionsCallback(
         'hofff_content_template_prefixes'
     ),
     'eval'                  => [

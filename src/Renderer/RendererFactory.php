@@ -153,9 +153,9 @@ class RendererFactory
      */
     protected static function configureAbstractRenderer(AbstractRenderer $renderer, array $config)
     {
-        $renderer->setExcludeFromSearch($config['exclude_from_search']);
-        $renderer->setCSSClasses(trim($config['css_classes']));
-        $renderer->setCSSID(trim($config['css_id']));
+        $renderer->setExcludeFromSearch($config['exclude_from_search'] ?? '');
+        $renderer->setCSSClasses(trim($config['css_classes'] ?? ''));
+        $renderer->setCSSID(trim($config['css_id'] ?? ''));
     }
 
     /**

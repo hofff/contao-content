@@ -12,7 +12,7 @@ class Util
     public static function isLanguageRelationsLoaded()
     {
         /** @psalm-suppress DeprecatedMethod */
-        return ContaoUtil::isModuleLoaded('HofffContaoContentBundle')
+        return ContaoUtil::isModuleLoaded('HofffContaoLanguageRelationsBundle')
             || ContaoUtil::isModuleLoaded('hofff_language_relations');
     }
 }

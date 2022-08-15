@@ -60,7 +60,7 @@ abstract class AbstractReferencesAction implements FragmentPreHandlerInterface
         ContaoFramework $contaoFramework,
         PageContextFactory $pageContextFactory,
         PageContextInitializer $pageContextInitializer,
-        ?SymfonyResponseTagger $responseTagger = null,
+        ?SymfonyResponseTagger $responseTagger,
         RequestStack $requestStack
     ) {
         $this->tokenChecker           = $tokenChecker;

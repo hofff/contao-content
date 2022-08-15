@@ -45,6 +45,9 @@
     "hofff/contao-language-relations": "^3.0",
     "phpcq/runner-bootstrap": "^1.0@dev"
   },
+  "conflict": {
+    "doctrine/dbal": "3.4.0"
+  },
   "suggest": {
     "hofff/contao-language-relations": "Allows page references to be resolved into the current root page tree"
   },

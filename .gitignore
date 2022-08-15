@@ -7,6 +7,7 @@
 !/README.md
 !/composer.json
 !/.phpcq.yaml.dist
+!/.phpcq.lock
 !/phpcs.xml.dist
 !/psalm.xml
 !/.github

@@ -26,6 +26,8 @@
                 <referencedMethod name="Contao\ModuleLoader::getActive"/>
                 <!-- We support Symfony 4.4 and cannot blindly follow Symfony approach to build a better world here -->
                 <referencedMethod name="Symfony\Component\HttpFoundation\RequestStack::getMasterRequest"/>
+                <!-- We support Contao 4.9 The InsertTagParser is introduced in Contao 4.13 -->
+                <referencedMethod name="Contao\Controller::replaceInsertTags"/>
             </errorLevel>
         </DeprecatedMethod>
         <InternalMethod>

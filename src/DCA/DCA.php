@@ -11,6 +11,7 @@ use Contao\Image;
 use Contao\StringUtil;
 use Hofff\Contao\Content\Util\ContaoUtil;
 use Hofff\Contao\Selectri\Model\Node;
+use stdClass;
 
 use function array_merge;
 use function asort;
@@ -133,7 +134,10 @@ class DCA
      */
     public static function getPageIcon(Node $node)
     {
-        return Image::getPath(Controller::getPageStatusIcon((object) $node->getData()));
+        /** @psalm-var stdClass $page */
+        $page = (object) $node->getData();
+
+        return Image::getPath(Controller::getPageStatusIcon($page));
     }
 
     /**

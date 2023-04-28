@@ -27,6 +27,10 @@ final class ModuleReferencesAction extends AbstractReferencesAction
     /** @param array<string,mixed> $attributes */
     protected function loadModel(array $attributes): ?Model
     {
+        if ($attributes['moduleModel'] instanceof ModuleModel) {
+            return $attributes['moduleModel'];
+        }
+
         return $this->contaoFramework
             ->getAdapter(ModuleModel::class)
             ->__call('findByPk', [$attributes['moduleModel']]);

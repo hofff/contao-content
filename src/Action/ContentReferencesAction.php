@@ -27,6 +27,10 @@ final class ContentReferencesAction extends AbstractReferencesAction
     /** @param array<string,mixed> $attributes */
     protected function loadModel(array $attributes): ?Model
     {
+        if ($attributes['contentModel'] instanceof ContentModel) {
+            return $attributes['contentModel'];
+        }
+
         return $this->contaoFramework
             ->getAdapter(ContentModel::class)
             ->__call('findByPk', [$attributes['contentModel']]);

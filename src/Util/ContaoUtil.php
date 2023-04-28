@@ -36,6 +36,7 @@ class ContaoUtil
      */
     public static function isPublished($model, $checkBackendUser = true)
     {
+        /** @psalm-suppress UndefinedConstant */
         if ($checkBackendUser && defined('BE_USER_LOGGED_IN') && BE_USER_LOGGED_IN) {
             return true;
         }

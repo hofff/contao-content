@@ -21,6 +21,7 @@ final class ContentReferencesAction extends AbstractReferencesAction
     ): Response {
         $this->initializePageContext($request, $model, $pageModel);
 
+        /** @psalm-suppress ArgumentTypeCoercion */
         return $this->createResponse($model, $section, $pageModel, (array) $classes);
     }
 

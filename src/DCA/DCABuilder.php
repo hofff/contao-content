@@ -127,6 +127,9 @@ class DCABuilder
 
     /**
      * @return list<string|int>
+     *
+     * @psalm-suppress MoreSpecificReturnType
+     * @psalm-suppress LessSpecificReturnStatement
      */
     public function fetchSuggestions()
     {

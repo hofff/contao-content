@@ -49,6 +49,7 @@ class RendererFactory
         $configs = array_values(StringUtil::deserialize($configs, true));
 
         foreach ($configs as $i => $config) {
+            /** @psalm-suppress InvalidArrayAccess */
             [$type] = explode('.', $config['_key'], 2);
 
             $method = 'add' . ucfirst($type) . 'Select';
@@ -168,6 +169,7 @@ class RendererFactory
      */
     protected static function addArticleSelect(stdClass $context, array $config, $index)
     {
+        /** @psalm-suppress PossiblyUndefinedArrayOffset */
         [, $articleId] = explode('.', $config['_key'], 2);
 
         $context->params['article'][] = $index;
@@ -203,6 +205,7 @@ SQL;
      */
     protected static function addPageSelect(stdClass $context, array $config, $index)
     {
+        /** @psalm-suppress PossiblyUndefinedArrayOffset */
         [, $pageId] = explode('.', $config['_key'], 2);
 
         if ($config['translate'] && $GLOBALS['objPage'] && Util::isLanguageRelationsLoaded()) {
@@ -251,6 +254,7 @@ SQL;
      */
     protected static function addModuleSelect(stdClass $context, array $config, $index)
     {
+        /** @psalm-suppress PossiblyUndefinedArrayOffset */
         [, $moduleId] = explode('.', $config['_key'], 2);
 
         $context->params['module'][] = $index;

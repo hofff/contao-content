@@ -88,6 +88,7 @@ class ArticleRenderer extends AbstractRenderer
             return false;
         }
 
+        /** @psalm-suppress UndefinedConstant */
         if ($this->article->guests && defined('FE_USER_LOGGED_IN') && FE_USER_LOGGED_IN) {
             return false;
         }

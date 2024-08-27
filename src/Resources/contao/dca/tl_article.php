@@ -23,7 +23,6 @@ use Hofff\Contao\Content\DCA\ArticleDCA;
 )();
 
 $GLOBALS['TL_DCA']['tl_article']['fields']['hofff_content_hide'] = [
-    'label'     => &$GLOBALS['TL_LANG']['tl_article']['hofff_content_hide'],
     'exclude'   => true,
     'inputType' => 'checkbox',
     'eval'      => [
@@ -34,7 +33,6 @@ $GLOBALS['TL_DCA']['tl_article']['fields']['hofff_content_hide'] = [
 ];
 
 $GLOBALS['TL_DCA']['tl_article']['fields']['hofff_content_page_filter'] = [
-    'label'     => &$GLOBALS['TL_LANG']['tl_article']['hofff_content_page_filter'],
     'exclude'   => true,
     'inputType' => 'pageTree',
     'eval'      => ['multiple' => true, 'fieldType' => 'checkbox'],
@@ -42,7 +40,6 @@ $GLOBALS['TL_DCA']['tl_article']['fields']['hofff_content_page_filter'] = [
 ];
 
 $GLOBALS['TL_DCA']['tl_article']['fields']['hofff_content_page_filter_strategy'] = [
-    'label'            => &$GLOBALS['TL_LANG']['tl_article']['hofff_content_page_filter_strategy'],
     'exclude'          => true,
     'default'          => 'blacklist',
     'inputType'        => 'select',
@@ -54,7 +51,6 @@ $GLOBALS['TL_DCA']['tl_article']['fields']['hofff_content_page_filter_strategy']
 ];
 
 $GLOBALS['TL_DCA']['tl_article']['fields']['hofff_content_page_filter_inheritance'] = [
-    'label'            => &$GLOBALS['TL_LANG']['tl_article']['hofff_content_page_filter_inheritance'],
     'exclude'          => true,
     'default'          => '',
     'inputType'        => 'checkbox',

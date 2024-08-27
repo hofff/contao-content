@@ -11,13 +11,7 @@ use function strlen;
 
 class StringUtil
 {
-    /**
-     * @param string $string
-     * @param int    $width
-     *
-     * @return string
-     */
-    public static function tabsToSpaces($string, $width = 4)
+    public static function tabsToSpaces(string $string, int $width = 4): string
     {
         return preg_replace_callback('/((?>[^\t\n\r]*))((?>\t+))/m', static function ($matches) use ($width) {
             $align  = strlen($matches[1]) % $width;
@@ -29,11 +23,10 @@ class StringUtil
 
     /**
      * @param array<string> $strings
-     * @param string        $prefix
      *
      * @return array<string>
      */
-    public static function prefixEach(array $strings, $prefix)
+    public static function prefixEach(array $strings, string $prefix): array
     {
         return array_map(static function ($string) use ($prefix) {
             return $prefix . $string;

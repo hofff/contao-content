@@ -12,12 +12,13 @@ use Symfony\Component\HttpFoundation\Response;
 
 final class ModuleReferencesAction extends AbstractReferencesAction
 {
+    /** {@inheritDoc} */
     public function __invoke(
         Request $request,
         ModuleModel $model,
         string $section,
-        ?PageModel $pageModel = null,
-        ?array $classes = null
+        PageModel|null $pageModel = null,
+        array|null $classes = null,
     ): Response {
         $this->initializePageContext($request, $model, $pageModel);
 
@@ -26,7 +27,7 @@ final class ModuleReferencesAction extends AbstractReferencesAction
     }
 
     /** @param array<string,mixed> $attributes */
-    protected function loadModel(array $attributes): ?Model
+    protected function loadModel(array $attributes): Model|null
     {
         if ($attributes['moduleModel'] instanceof ModuleModel) {
             return $attributes['moduleModel'];

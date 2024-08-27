@@ -29,24 +29,16 @@ use function defined;
 use function implode;
 use function sprintf;
 
-/**
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
- */
+/** @SuppressWarnings(PHPMD.CouplingBetweenObjects) */
 class DCABuilder
 {
-    /** @var string */
-    protected $paletteTemplate = '';
+    protected string $paletteTemplate = '';
 
     public function __construct()
     {
     }
 
-    /**
-     * @param string $template
-     *
-     * @return void
-     */
-    public function setPaletteTemplate($template)
+    public function setPaletteTemplate(string $template): void
     {
         $this->paletteTemplate = $template;
     }
@@ -54,32 +46,27 @@ class DCABuilder
     /**
      * @param array<string,mixed> $dca
      *
-     * @return void
-     *
      * @SuppressWarnings(PHPMD.Superglobals)
      */
-    public function build(array &$dca)
+    public function build(array &$dca): void
     {
         System::loadLanguageFile('hofff_content');
         Controller::loadDataContainer('hofff_content');
 
         $dca['palettes']['hofff_content_references'] = sprintf(
             $this->paletteTemplate,
-            $GLOBALS['TL_DCA']['hofff_content']['palettes']['default']
+            $GLOBALS['TL_DCA']['hofff_content']['palettes']['default'],
         );
 
         $dca['fields'] = array_replace(
             $dca['fields'],
-            $GLOBALS['TL_DCA']['hofff_content']['fields']
+            $GLOBALS['TL_DCA']['hofff_content']['fields'],
         );
 
         $dca['fields']['hofff_content_references']['eval']['data'] = $this->createFactory();
     }
 
-    /**
-     * @return DataFactory
-     */
-    protected function createFactory()
+    protected function createFactory(): DataFactory
     {
         $factory = new SQLAdjacencyTreeDataFactory();
         $factory->getConfig()->setTable('hofff_content_tree');
@@ -131,7 +118,7 @@ class DCABuilder
      * @psalm-suppress MoreSpecificReturnType
      * @psalm-suppress LessSpecificReturnStatement
      */
-    public function fetchSuggestions()
+    public function fetchSuggestions(): array
     {
         $params = [];
 
@@ -149,12 +136,8 @@ class DCABuilder
         return Database::getInstance()->prepare($sql)->execute($params)->fetchEach('id');
     }
 
-    /**
-     * @param array<int,string|int> $params
-     *
-     * @return string|null
-     */
-    protected function getRecentlyEditedArticlesSelect(array &$params)
+    /** @param array<int,string|int> $params */
+    protected function getRecentlyEditedArticlesSelect(array &$params): string|null
     {
         $condition = '';
         $user      = BackendUser::getInstance();
@@ -190,32 +173,26 @@ LIMIT
 SQL;
     }
 
-    /**
-     * @return string|null
-     */
-    protected function getRecentlyEditedModulesSelect()
+    protected function getRecentlyEditedModulesSelect(): string|null
     {
         if (defined('BE_USER_LOGGED_IN') && BE_USER_LOGGED_IN && ! $this->hasAccessToFrontendModules()) {
             return null;
         }
 
-        return <<<SQL
+        return <<<'SQL'
 SELECT
-	CONCAT('module.', id)	AS id,
-	tstamp					AS tstamp
+    CONCAT('module.', id)   AS id,
+    tstamp                  AS tstamp
 FROM
-	tl_module
+    tl_module
 ORDER BY
-	tstamp DESC
+    tstamp DESC
 LIMIT
-	20
+    20
 SQL;
     }
 
-    /**
-     * @return string
-     */
-    public function generateNodeIcon(Node $node, Data $data)
+    public function generateNodeIcon(Node $node, Data $data): string
     {
         $type   = $node->getData()['node_type'];
         $config = $data->getWidget()->getFieldDCA()['nodeTypes'][$type];
@@ -229,10 +206,7 @@ SQL;
         return Image::getPath($icon);
     }
 
-    /**
-     * @return string
-     */
-    public function generateNodeLabel(Node $node, Data $data)
+    public function generateNodeLabel(Node $node, Data $data): string
     {
         $type   = $node->getData()['node_type'];
         $config = $data->getWidget()->getFieldDCA()['nodeTypes'][$type];
@@ -246,14 +220,11 @@ SQL;
         return sprintf(
             '%s <span class="hofff-content-label">(ID %s)</span>',
             $data['title'],
-            $data['id']
+            $data['id'],
         );
     }
 
-    /**
-     * @return string
-     */
-    public function generateNodeContent(Node $node, Data $data)
+    public function generateNodeContent(Node $node, Data $data): string
     {
         if (! $node->isSelectable()) {
             return '';
@@ -276,7 +247,7 @@ SQL;
 
         return sprintf(
             '<div class="hofff-content-html" data-hofff-content-html="%s"></div>',
-            ContaoStringUtil::specialchars($content, false, true)
+            ContaoStringUtil::specialchars($content, false, true),
         );
     }
 
@@ -287,7 +258,7 @@ SQL;
      *
      * @SuppressWarnings(PHPMD.Superglobals)
      */
-    protected function createWidgets(array $fields, Node $node, Data $data)
+    protected function createWidgets(array $fields, Node $node, Data $data): array
     {
         $value = $data->getWidget()->getValue();
 
@@ -296,7 +267,7 @@ SQL;
             $attributes = Widget::getAttributesFromDca(
                 $config,
                 $node->getAdditionalInputName($name),
-                $value[$node->getKey()][$name]
+                $value[$node->getKey()][$name],
             );
 
             /** @psalm-var class-string<Widget> $class */
@@ -309,10 +280,7 @@ SQL;
         return $widgets;
     }
 
-    /**
-     * @return bool
-     */
-    protected function hasAccessToFrontendModules()
+    protected function hasAccessToFrontendModules(): bool
     {
         $user = BackendUser::getInstance();
         if (! $user instanceof BackendUser) {

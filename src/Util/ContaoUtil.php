@@ -20,21 +20,15 @@ use function sprintf;
 use function str_replace;
 use function strlen;
 
-class ContaoUtil
+final class ContaoUtil
 {
     public const INDEXER_STOP     = '<!-- indexer::stop -->';
     public const INDEXER_CONTINUE = '<!-- indexer::continue -->';
 
     /** @var list<string> */
-    private static $indexerTokens = [self::INDEXER_STOP, self::INDEXER_CONTINUE];
+    private static array $indexerTokens = [self::INDEXER_STOP, self::INDEXER_CONTINUE];
 
-    /**
-     * @param object $model
-     * @param bool   $checkBackendUser
-     *
-     * @return bool
-     */
-    public static function isPublished($model, $checkBackendUser = true)
+    public static function isPublished(object $model, bool $checkBackendUser = true): bool
     {
         /** @psalm-suppress UndefinedConstant */
         if ($checkBackendUser && defined('BE_USER_LOGGED_IN') && BE_USER_LOGGED_IN) {
@@ -48,12 +42,7 @@ class ContaoUtil
             && (! $model->stop || $model->stop > $time + 60);
     }
 
-    /**
-     * @param string $content
-     *
-     * @return string
-     */
-    public static function excludeFromSearch($content)
+    public static function excludeFromSearch(string $content): string
     {
         if (! strlen($content)) {
             return $content;
@@ -65,13 +54,8 @@ class ContaoUtil
         return $content;
     }
 
-    /**
-     * @param string              $tpl
-     * @param array<string,mixed> $data
-     *
-     * @return Template
-     */
-    public static function createTemplate($tpl, ?array $data = null)
+    /** @param array<string,mixed> $data */
+    public static function createTemplate(string $tpl, array|null $data = null): Template
     {
         $class    = defined('TL_MODE') && TL_MODE === 'FE' ? FrontendTemplate::class : BackendTemplate::class;
         $template = new $class($tpl);
@@ -80,17 +64,14 @@ class ContaoUtil
         return $template;
     }
 
-    /**
-     * @return string
-     */
-    public static function renderBackendWidget(Widget $widget)
+    public static function renderBackendWidget(Widget $widget): string
     {
         $description = '';
 
         if (! $widget->hasErrors() && strlen($widget->description)) {
             $description = sprintf(
                 '<p class="tl_help tl_tip">%s</p>',
-                $widget->description
+                $widget->description,
             );
         }
 
@@ -98,18 +79,15 @@ class ContaoUtil
             '<div class="%s">%s%s</div>',
             $widget->tl_class,
             $widget->parse(),
-            $description
+            $description,
         );
     }
 
     /**
      * @param array<string,mixed> $query
-     * @param string              $image
      * @param array<int,string>   $label
-     *
-     * @return string
      */
-    public static function generateBackendIconLink(array $query, $image, $label)
+    public static function generateBackendIconLink(array $query, string $image, array $label): string
     {
         $title = sprintf($label[1], $query['id'] ?? $query['pn']);
 
@@ -122,18 +100,12 @@ class ContaoUtil
             $title,
             $title,
             Image::getHtml($image, $title),
-            $label[0]
+            $label[0],
         );
     }
 
-    /**
-     * @deprecated
-     *
-     * @param string $module
-     *
-     * @return bool
-     */
-    public static function isModuleLoaded($module)
+    /** @deprecated */
+    public static function isModuleLoaded(string $module): bool
     {
         return in_array($module, ModuleLoader::getActive());
     }

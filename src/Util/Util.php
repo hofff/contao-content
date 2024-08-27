@@ -6,10 +6,7 @@ namespace Hofff\Contao\Content\Util;
 
 class Util
 {
-    /**
-     * @return bool
-     */
-    public static function isLanguageRelationsLoaded()
+    public static function isLanguageRelationsLoaded(): bool
     {
         /** @psalm-suppress DeprecatedMethod */
         return ContaoUtil::isModuleLoaded('HofffContaoLanguageRelationsBundle')

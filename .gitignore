@@ -1,13 +1,11 @@
-/*
-!/.gitignore
-!/.composer-require-checker.json
-!/contao-module/
-!/runonce/
-!/src/
-!/README.md
-!/composer.json
-!/.phpcq.yaml.dist
-!/.phpcq.lock
-!/phpcs.xml.dist
-!/psalm.xml
-!/.github
+# Companion
+/.env.companion
+
+# Composer
+/composer.lock
+/vendor
+
+# PHPCQ
+/.phpcq
+/.phpcq.yaml
+/.phpcs-cache

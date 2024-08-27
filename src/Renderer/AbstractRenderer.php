@@ -6,25 +6,20 @@ namespace Hofff\Contao\Content\Renderer;
 
 use Hofff\Contao\Content\Util\ContaoUtil;
 
-use function strlen;
 use function trim;
 
 abstract class AbstractRenderer implements Renderer
 {
     /** @var array<string,bool> */
-    private static $renderStack = [];
+    private static array $renderStack = [];
 
-    /** @var string */
-    private $column;
+    private string $column;
 
-    /** @var bool */
-    private $excludeFromSearch;
+    private bool $excludeFromSearch;
 
-    /** @var string|null */
-    private $cssClasses;
+    private string|null $cssClasses = null;
 
-    /** @var string|null */
-    private $cssID;
+    private string|null $cssId = null;
 
     protected function __construct()
     {
@@ -32,10 +27,7 @@ abstract class AbstractRenderer implements Renderer
         $this->excludeFromSearch = false;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function getColumn()
+    public function getColumn(): string
     {
         return $this->column;
     }
@@ -45,15 +37,12 @@ abstract class AbstractRenderer implements Renderer
      *
      * @psalm-suppress RedundantCastGivenDocblockType
      */
-    public function setColumn($column)
+    public function setColumn(string $column): void
     {
-        $this->column = (string) $column;
+        $this->column = $column;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function getExcludeFromSearch()
+    public function getExcludeFromSearch(): bool
     {
         return $this->excludeFromSearch;
     }
@@ -63,15 +52,12 @@ abstract class AbstractRenderer implements Renderer
      *
      * @psalm-suppress RedundantCastGivenDocblockType
      */
-    public function setExcludeFromSearch($exclude)
+    public function setExcludeFromSearch(bool $exclude): void
     {
-        $this->excludeFromSearch = (bool) $exclude;
+        $this->excludeFromSearch = $exclude;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function getCSSClasses()
+    public function getCssClasses(): string|null
     {
         return $this->cssClasses;
     }
@@ -81,9 +67,9 @@ abstract class AbstractRenderer implements Renderer
      *
      * @psalm-suppress RedundantCastGivenDocblockType
      */
-    public function setCSSClasses($classes)
+    public function setCssClasses(string|null $classes): void
     {
-        $this->cssClasses = $classes === null || ! strlen($classes) ? null : (string) $classes;
+        $this->cssClasses = $classes === null || $classes === '' ? null : $classes;
     }
 
     /**
@@ -91,14 +77,14 @@ abstract class AbstractRenderer implements Renderer
      *
      * @psalm-suppress RedundantCastGivenDocblockType
      */
-    public function addCSSClasses($classes)
+    public function addCssClasses(string|null $classes): void
     {
-        if ($classes === null || ! strlen($classes)) {
+        if ($classes === null || $classes === '') {
             return;
         }
 
         if ($this->cssClasses === null) {
-            $this->cssClasses = (string) $classes;
+            $this->cssClasses = $classes;
 
             return;
         }
@@ -106,28 +92,18 @@ abstract class AbstractRenderer implements Renderer
         $this->cssClasses .= ' ' . $classes;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function getCSSID()
+    public function getCssId(): string|null
     {
-        return $this->cssID;
+        return $this->cssId;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @psalm-suppress RedundantCastGivenDocblockType
-     */
-    public function setCSSID($cssId)
+    /** @psalm-suppress RedundantCastGivenDocblockType */
+    public function setCssId(string|null $cssId): void
     {
-        $this->cssID = $cssId === null || ! strlen($cssId) ? null : (string) $cssId;
+        $this->cssId = $cssId === null || $cssId === '' ? null : $cssId;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function render()
+    public function render(): string
     {
         if (! $this->isValid()) {
             return '';
@@ -148,10 +124,7 @@ abstract class AbstractRenderer implements Renderer
         return $content;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->render();
     }
@@ -161,41 +134,24 @@ abstract class AbstractRenderer implements Renderer
         return true;
     }
 
-    /**
-     * @return string
-     */
-    abstract protected function getCacheKey();
+    abstract protected function getCacheKey(): string;
 
-    /**
-     * @return string
-     */
-    abstract protected function doRender();
+    abstract protected function doRender(): string;
 
-    /**
-     * @return bool
-     */
-    protected function shouldExcludeFromSearch()
+    protected function shouldExcludeFromSearch(): bool
     {
         return $this->getExcludeFromSearch() || $this->isProtected();
     }
 
-    /**
-     * @return bool
-     */
-    protected function isProtected()
+    protected function isProtected(): bool
     {
         return false;
     }
 
-    /**
-     * @param object $element
-     *
-     * @return void
-     */
-    protected function applyCSSClassesAndID($element)
+    protected function applyCSSClassesAndID(object $element): void
     {
-        $classes = $this->getCSSClasses();
-        $cssId   = $this->getCSSID();
+        $classes = $this->getCssClasses();
+        $cssId   = $this->getCssId();
 
         if ($classes === null && $cssId === null) {
             return;
@@ -209,10 +165,7 @@ abstract class AbstractRenderer implements Renderer
         $element->cssID = $css;
     }
 
-    /**
-     * @return bool
-     */
-    private function pushStack()
+    private function pushStack(): bool
     {
         $key = $this->getCacheKey();
 
@@ -223,10 +176,7 @@ abstract class AbstractRenderer implements Renderer
         return self::$renderStack[$key] = true;
     }
 
-    /**
-     * @return void
-     */
-    private function popStack()
+    private function popStack(): void
     {
         unset(self::$renderStack[$this->getCacheKey()]);
     }

@@ -36,39 +36,15 @@ use function trim;
  */
 abstract class AbstractReferencesAction implements FragmentPreHandlerInterface
 {
-    /** @var TokenChecker */
-    private $tokenChecker;
-
-    /** @var SymfonyResponseTagger|null */
-    private $responseTagger;
-
-    /** @var ContaoFramework */
-    protected $contaoFramework;
-
-    /** @var PageContextFactory */
-    private $pageContextFactory;
-
-    /** @var PageContextInitializer */
-    private $pageContextInitializer;
-
-    /** @var RequestStack */
-    private $requestStack;
-
     /** @SuppressWarnings(PHPMD.LongVariable) */
     public function __construct(
-        TokenChecker $tokenChecker,
-        ContaoFramework $contaoFramework,
-        PageContextFactory $pageContextFactory,
-        PageContextInitializer $pageContextInitializer,
-        ?SymfonyResponseTagger $responseTagger,
-        RequestStack $requestStack
+        private readonly TokenChecker $tokenChecker,
+        protected readonly ContaoFramework $contaoFramework,
+        private readonly PageContextFactory $pageContextFactory,
+        private readonly PageContextInitializer $pageContextInitializer,
+        private readonly SymfonyResponseTagger|null $responseTagger,
+        private readonly RequestStack $requestStack,
     ) {
-        $this->tokenChecker           = $tokenChecker;
-        $this->responseTagger         = $responseTagger;
-        $this->contaoFramework        = $contaoFramework;
-        $this->pageContextFactory     = $pageContextFactory;
-        $this->pageContextInitializer = $pageContextInitializer;
-        $this->requestStack           = $requestStack;
     }
 
     public function preHandleFragment(FragmentReference $uri, FragmentConfig $config): void
@@ -86,17 +62,21 @@ abstract class AbstractReferencesAction implements FragmentPreHandlerInterface
     }
 
     /** @param array<string,mixed> $attributes */
-    abstract protected function loadModel(array $attributes): ?Model;
+    abstract protected function loadModel(array $attributes): Model|null;
 
     /**
      * @param list<string> $classes
      *
      * @SuppressWarnings(PHPMD.Superglobals)
      */
-    protected function createResponse(Model $model, string $section, ?PageModel $pageModel, array $classes): Response
-    {
-        $GLOBALS['objPage'] = $GLOBALS['objPage'] ?? $pageModel;
-        $renderers          = $this->createRenderer($model, $section);
+    protected function createResponse(
+        Model $model,
+        string $section,
+        PageModel|null $pageModel,
+        array $classes,
+    ): Response {
+        $GLOBALS['objPage'] ??= $pageModel;
+        $renderers            = $this->createRenderer($model, $section);
 
         if ($model->hofff_content_template) {
             $content = $this->parseTemplate($model, $renderers, $section, $classes);
@@ -124,7 +104,7 @@ abstract class AbstractReferencesAction implements FragmentPreHandlerInterface
         return $response;
     }
 
-    protected function initializePageContext(Request $request, Model $model, ?PageModel $pageModel): void
+    protected function initializePageContext(Request $request, Model $model, PageModel|null $pageModel): void
     {
         if ($this->requestStack->getMasterRequest() !== $request) {
             return;
@@ -138,9 +118,7 @@ abstract class AbstractReferencesAction implements FragmentPreHandlerInterface
         $this->pageContextInitializer->initialize($pageContext, $request);
     }
 
-    /**
-     * @return Renderer[]
-     */
+    /** @return Renderer[] */
     private function createRenderer(Model $model, string $section): array
     {
         $renderers = RendererFactory::createAll($model->hofff_content_references, $section);
@@ -166,7 +144,7 @@ abstract class AbstractReferencesAction implements FragmentPreHandlerInterface
         Model $model,
         array $renderers,
         string $section,
-        ?array $classes = null
+        array|null $classes = null,
     ): string {
         $template = new FrontendTemplate($model->hofff_content_template);
 
@@ -190,14 +168,14 @@ abstract class AbstractReferencesAction implements FragmentPreHandlerInterface
                 'hl'        => $level,
                 'class'     => $class,
                 'cssID'     => $cssID,
-            ]
+            ],
         );
 
         return $template->parse();
     }
 
     /** @SuppressWarnings(PHPMD.CyclomaticComplexity) */
-    private function setCacheHeaders(Response $response, Model $model, ?PageModel $pageModel): void
+    private function setCacheHeaders(Response $response, Model $model, PageModel|null $pageModel): void
     {
         if (
             $model->hofff_content_bypass_cache
@@ -219,7 +197,7 @@ abstract class AbstractReferencesAction implements FragmentPreHandlerInterface
         if (
             (defined('FE_USER_LOGGED_IN') && FE_USER_LOGGED_IN === true)
             || (defined('BE_USER_LOGGED_IN') && BE_USER_LOGGED_IN === true)
-            || $pageModel->protected
+            || (bool) $pageModel->protected
             || $this->tokenChecker->hasBackendUser()
         ) {
             $response->headers->addCacheControlDirective('no-cache');

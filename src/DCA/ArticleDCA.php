@@ -14,24 +14,21 @@ class ArticleDCA
 {
     /**
      * @param array<string,mixed> $row
-     * @param string              $label
-     *
-     * @return string
      *
      * @SuppressWarnings(PHPMD.Superglobals)
      */
-    public function labelCallback($row, $label)
+    public function labelCallback(array $row, string $label): string
     {
         $callback = $GLOBALS['TL_DCA']['tl_article']['list']['label']['label_callback_hofff_content'];
         $label    = call_user_func_array(
             [System::importStatic($callback[0]), $callback[1]],
-            func_get_args()
+            func_get_args(),
         );
 
         if ($row['hofff_content_hide']) {
             $label .= sprintf(
                 ' <span style="color:#4b85ba;padding-left:3px">[%s]</span>',
-                $GLOBALS['TL_LANG']['tl_article']['hofff_content_hide'][0]
+                $GLOBALS['TL_LANG']['tl_article']['hofff_content_hide'][0],
             );
         }
 

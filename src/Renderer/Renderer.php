@@ -6,74 +6,29 @@ namespace Hofff\Contao\Content\Renderer;
 
 interface Renderer
 {
-    /**
-     * @return string
-     */
-    public function render();
+    public function render(): string;
 
     public function isValid(): bool;
 
-    /**
-     * @deprecated Use the render method instead
-     *
-     * @return string
-     */
-    public function __toString();
+    /** @deprecated Use the render method instead */
+    public function __toString(): string;
 
-    /**
-     * @return string
-     */
-    public function getColumn();
+    public function getColumn(): string;
 
-    /**
-     * @param string $column
-     *
-     * @return void
-     */
-    public function setColumn($column);
+    public function setColumn(string $column): void;
 
-    /**
-     * @return bool
-     *
-     * @SuppressWarnings(PHPMD.BooleanGetMethodName)
-     */
-    public function getExcludeFromSearch();
+    /** @SuppressWarnings(PHPMD.BooleanGetMethodName) */
+    public function getExcludeFromSearch(): bool;
 
-    /**
-     * @param bool $exclude
-     *
-     * @return void
-     */
-    public function setExcludeFromSearch($exclude);
+    public function setExcludeFromSearch(bool $exclude): void;
 
-    /**
-     * @return string|null
-     */
-    public function getCSSClasses();
+    public function getCssClasses(): string|null;
 
-    /**
-     * @param string|null $classes
-     *
-     * @return void
-     */
-    public function setCSSClasses($classes);
+    public function setCssClasses(string|null $classes): void;
 
-    /**
-     * @param string|null $classes
-     *
-     * @return void
-     */
-    public function addCSSClasses($classes);
+    public function addCssClasses(string|null $classes): void;
 
-    /**
-     * @return string|null
-     */
-    public function getCSSID();
+    public function getCssId(): string|null;
 
-    /**
-     * @param string|null $cssId
-     *
-     * @return void
-     */
-    public function setCSSID($cssId);
+    public function setCssId(string|null $cssId): void;
 }

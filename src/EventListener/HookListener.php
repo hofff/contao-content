@@ -6,13 +6,7 @@ namespace Hofff\Contao\Content\EventListener;
 
 class HookListener
 {
-    /**
-     * @param object $row
-     * @param bool   $visible
-     *
-     * @return bool
-     */
-    public function isVisibleElement($row, $visible)
+    public function isVisibleElement(object $row, bool $visible): bool
     {
         return $visible && ! $row->hofff_content_hide;
     }

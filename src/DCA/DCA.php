@@ -23,16 +23,10 @@ use const SORT_LOCALE_STRING;
 
 class DCA
 {
-    /**
-     * @param string $prefixesKey
-     *
-     * @return callable
-     *
-     * @SuppressWarnings(PHPMD.Superglobals)
-     */
-    public static function getTemplateGroupOptionsCallback($prefixesKey)
+    /** @SuppressWarnings(PHPMD.Superglobals) */
+    public static function getTemplateGroupOptionsCallback(string $prefixesKey): callable
     {
-        return static function (?DataContainer $dataContainer) use ($prefixesKey) {
+        return static function (DataContainer|null $dataContainer) use ($prefixesKey) {
             if (! $dataContainer) {
                 return [];
             }
@@ -51,12 +45,8 @@ class DCA
         };
     }
 
-    /**
-     * @return callable
-     *
-     * @SuppressWarnings(PHPMD.Superglobals)
-     */
-    public static function getLayoutSectionOptionsCallback()
+    /** @SuppressWarnings(PHPMD.Superglobals) */
+    public static function getLayoutSectionOptionsCallback(): callable
     {
         static $sections = null;
 
@@ -97,22 +87,15 @@ class DCA
         };
     }
 
-    /**
-     * @return string
-     */
-    public static function getArticleIcon(Node $node)
+    public static function getArticleIcon(Node $node): string
     {
         $published = ContaoUtil::isPublished((object) $node->getData());
 
         return Image::getPath($published ? 'articles.gif' : 'articles_.gif');
     }
 
-    /**
-     * @return string
-     *
-     * @SuppressWarnings(PHPMD.Superglobals)
-     */
-    public static function getArticleLabel(Node $node)
+    /** @SuppressWarnings(PHPMD.Superglobals) */
+    public static function getArticleLabel(Node $node): string
     {
         $data = $node->getData();
 
@@ -125,14 +108,11 @@ class DCA
             '%s <span class="hofff-content-label">[%s] (ID %s)</span>',
             $data['title'],
             $column,
-            $data['id']
+            $data['id'],
         );
     }
 
-    /**
-     * @return string
-     */
-    public static function getPageIcon(Node $node)
+    public static function getPageIcon(Node $node): string
     {
         /** @psalm-var stdClass $page */
         $page = (object) $node->getData();
@@ -140,12 +120,8 @@ class DCA
         return Image::getPath(Controller::getPageStatusIcon($page));
     }
 
-    /**
-     * @return string
-     *
-     * @SuppressWarnings(PHPMD.Superglobals)
-     */
-    public static function getModuleLabel(Node $node)
+    /** @SuppressWarnings(PHPMD.Superglobals) */
+    public static function getModuleLabel(Node $node): string
     {
         $data = $node->getData();
 
@@ -158,7 +134,7 @@ class DCA
             '%s <span class="hofff-content-label">[%s] (ID %s)</span>',
             $data['title'],
             $type,
-            $data['id']
+            $data['id'],
         );
     }
 }

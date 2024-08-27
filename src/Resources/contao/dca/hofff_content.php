@@ -116,7 +116,7 @@ $GLOBALS['TL_DCA']['hofff_content']['fields']['hofff_content_template'] = [
     'exclude'               => true,
     'inputType'             => 'select',
     'options_callback'      => DCA::getTemplateGroupOptionsCallback(
-        'hofff_content_template_prefixes'
+        'hofff_content_template_prefixes',
     ),
     'eval'                  => [
         'includeBlankOption'    => true,

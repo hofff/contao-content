@@ -20,50 +20,34 @@ use function is_array;
 
 class ArticleRenderer extends AbstractRenderer
 {
-    /** @var ArticleModel|null */
-    private $article;
+    private ArticleModel|null $article = null;
 
-    /** @var bool */
-    private $renderContainer;
+    private bool $renderContainer;
 
     public function __construct()
     {
         parent::__construct();
+
         $this->renderContainer = false;
     }
 
-    /**
-     * @return ArticleModel|null
-     */
-    public function getArticle()
+    public function getArticle(): ArticleModel|null
     {
         return $this->article;
     }
 
-    /**
-     * @return void
-     */
-    public function setArticle(ArticleModel $article)
+    public function setArticle(ArticleModel $article): void
     {
         $this->article = $article;
     }
 
-    /**
-     * @return bool
-     *
-     * @SuppressWarnings(PHPMD.BooleanGetMethodName)
-     */
-    public function getRenderContainer()
+    /** @SuppressWarnings(PHPMD.BooleanGetMethodName) */
+    public function getRenderContainer(): bool
     {
         return $this->renderContainer;
     }
 
-    /**
-     * @param bool|mixed $renderContainer
-     *
-     * @return void
-     */
-    public function setRenderContainer($renderContainer)
+    public function setRenderContainer(mixed $renderContainer): void
     {
         $this->renderContainer = (bool) $renderContainer;
     }
@@ -135,10 +119,7 @@ class ArticleRenderer extends AbstractRenderer
         return $strategy !== 'whitelist';
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    protected function getCacheKey()
+    protected function getCacheKey(): string
     {
         if ($this->article === null) {
             return self::class;
@@ -147,10 +128,7 @@ class ArticleRenderer extends AbstractRenderer
         return self::class . $this->article->id;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    protected function doRender()
+    protected function doRender(): string
     {
         $article = $this->getArticle();
         if ($article === null) {
@@ -170,20 +148,13 @@ class ArticleRenderer extends AbstractRenderer
         return $module->generate(! $this->getRenderContainer());
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    protected function isProtected()
+    protected function isProtected(): bool
     {
         return $this->article && $this->article->protected;
     }
 
-    /**
-     * @return void
-     *
-     * @SuppressWarnings(PHPMD.Superglobals)
-     */
-    protected function executeGetArticleHook(ArticleModel $article)
+    /** @SuppressWarnings(PHPMD.Superglobals) */
+    protected function executeGetArticleHook(ArticleModel $article): void
     {
         if (! isset($GLOBALS['TL_HOOKS']['getArticle'])) {
             return;
@@ -196,7 +167,7 @@ class ArticleRenderer extends AbstractRenderer
         foreach ($GLOBALS['TL_HOOKS']['getArticle'] as $callback) {
             call_user_func(
                 [System::importStatic($callback[0]), $callback[1]],
-                $article
+                $article,
             );
         }
     }

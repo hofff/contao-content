@@ -16,26 +16,17 @@ use function vsprintf;
 class QueryUtil
 {
     /**
-     * @param string            $sql
      * @param array<mixed>|null $placeholders
      * @param array<mixed>|null $params
-     *
-     * @return Result
      */
-    public static function query($sql, ?array $placeholders = null, ?array $params = null)
+    public static function query(string $sql, array|null $placeholders = null, array|null $params = null): Result
     {
         $placeholders === null || $sql = vsprintf($sql, $placeholders);
 
         return Database::getInstance()->prepare($sql)->execute($params);
     }
 
-    /**
-     * @param mixed  $params
-     * @param string $wildcard
-     *
-     * @return string
-     */
-    public static function wildcards($params, $wildcard = '?')
+    public static function wildcards(mixed $params, string $wildcard = '?'): string
     {
         return rtrim(str_repeat($wildcard . ',', count((array) $params)), ',');
     }
@@ -45,7 +36,7 @@ class QueryUtil
      *
      * @return array<int>
      */
-    public static function ids($ids)
+    public static function ids(int|array $ids): array
     {
         return array_filter((array) $ids, static function ($rowId) {
             return $rowId >= 1;

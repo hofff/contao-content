@@ -8,26 +8,19 @@ use Contao\ModuleModel;
 
 class ModuleRenderer extends AbstractRenderer
 {
-    /** @var ModuleModel|null */
-    private $module;
+    private ModuleModel|null $module = null;
 
     public function __construct()
     {
         parent::__construct();
     }
 
-    /**
-     * @return ModuleModel|null
-     */
-    public function getModule()
+    public function getModule(): ModuleModel|null
     {
         return $this->module;
     }
 
-    /**
-     * @return void
-     */
-    public function setModule(ModuleModel $module)
+    public function setModule(ModuleModel $module): void
     {
         $this->module = $module;
     }
@@ -37,10 +30,7 @@ class ModuleRenderer extends AbstractRenderer
         return (bool) $this->getModule();
     }
 
-    /**
-     * @return string
-     */
-    protected function getCacheKey()
+    protected function getCacheKey(): string
     {
         if ($this->module === null) {
             return self::class;
@@ -49,18 +39,12 @@ class ModuleRenderer extends AbstractRenderer
         return self::class . $this->module->id;
     }
 
-    /**
-     * @return string
-     */
-    protected function doRender()
+    protected function doRender(): string
     {
         return '';
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    protected function isProtected()
+    protected function isProtected(): bool
     {
         if ($this->module === null) {
             return false;

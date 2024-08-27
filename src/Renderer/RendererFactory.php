@@ -18,7 +18,6 @@ use stdClass;
 use function array_filter;
 use function array_merge;
 use function array_values;
-use function assert;
 use function call_user_func;
 use function call_user_func_array;
 use function explode;
@@ -35,11 +34,10 @@ class RendererFactory
 {
     /**
      * @param list<array<string,mixed>> $configs
-     * @param string                    $column
      *
      * @return Renderer[]
      */
-    public static function createAll($configs, $column)
+    public static function createAll(array $configs, string $column): array
     {
         $context          = new stdClass();
         $context->selects = [];
@@ -61,7 +59,7 @@ class RendererFactory
                 [self::class, $method],
                 $context,
                 $config,
-                $i
+                $i,
             );
         }
 
@@ -86,7 +84,7 @@ class RendererFactory
                 $renderer = call_user_func(
                     [self::class, $method],
                     $result,
-                    $configs[$i]
+                    $configs[$i],
                 );
                 $renderer->setColumn($column);
 
@@ -108,16 +106,13 @@ class RendererFactory
         return $renderers;
     }
 
-    /**
-     * @param array<string,mixed> $config
-     *
-     * @return ArticleRenderer
-     */
-    protected static function createArticleRenderer(Result $result, array $config)
+    /** @param array<string,mixed> $config */
+    protected static function createArticleRenderer(Result $result, array $config): ArticleRenderer
     {
-        $article             = Registry::getInstance()->fetch('tl_article', $result->id);
-        $article || $article = new ArticleModel($result);
-        assert($article instanceof ArticleModel);
+        $article = Registry::getInstance()->fetch('tl_article', $result->id);
+        if (! $article instanceof ArticleModel) {
+            $article = new ArticleModel($result);
+        }
 
         $renderer = new ArticleRenderer();
         $renderer->setArticle($article);
@@ -128,16 +123,13 @@ class RendererFactory
         return $renderer;
     }
 
-    /**
-     * @param array<string,mixed> $config
-     *
-     * @return ModuleRenderer
-     */
-    protected static function createModuleRenderer(Result $result, array $config)
+    /** @param array<string,mixed> $config */
+    protected static function createModuleRenderer(Result $result, array $config): ModuleRenderer
     {
-        $module            = Registry::getInstance()->fetch('tl_module', $result->id);
-        $module || $module = new ModuleModel($result);
-        assert($module instanceof ModuleModel);
+        $module = Registry::getInstance()->fetch('tl_module', $result->id);
+        if (! $module instanceof ModuleModel) {
+            $module = new ModuleModel($result);
+        }
 
         $renderer = new ModuleRenderer();
         $renderer->setModule($module);
@@ -147,27 +139,20 @@ class RendererFactory
         return $renderer;
     }
 
-    /**
-     * @param array<string,mixed> $config
-     *
-     * @return void
-     */
-    protected static function configureAbstractRenderer(AbstractRenderer $renderer, array $config)
+    /** @param array<string,mixed> $config */
+    protected static function configureAbstractRenderer(AbstractRenderer $renderer, array $config): void
     {
         $renderer->setExcludeFromSearch((bool) ($config['exclude_from_search'] ?? ''));
-        $renderer->setCSSClasses(trim($config['css_classes'] ?? ''));
-        $renderer->setCSSID(trim($config['css_id'] ?? ''));
+        $renderer->setCssClasses(trim($config['css_classes'] ?? ''));
+        $renderer->setCssId(trim($config['css_id'] ?? ''));
     }
 
     /**
      * @param array<string,mixed> $config
-     * @param int                 $index
-     *
-     * @return void
      *
      * @SuppressWarnings(PHPMD.LongVariable)
      */
-    protected static function addArticleSelect(stdClass $context, array $config, $index)
+    protected static function addArticleSelect(stdClass $context, array $config, int $index): void
     {
         /** @psalm-suppress PossiblyUndefinedArrayOffset */
         [, $articleId] = explode('.', $config['_key'], 2);
@@ -196,14 +181,11 @@ SQL;
 
     /**
      * @param array<string,mixed> $config
-     * @param int                 $index
-     *
-     * @return void
      *
      * @SuppressWarnings(PHPMD.Superglobals)
      * @SuppressWarnings(PHPMD.LongVariable)
      */
-    protected static function addPageSelect(stdClass $context, array $config, $index)
+    protected static function addPageSelect(stdClass $context, array $config, int $index): void
     {
         /** @psalm-suppress PossiblyUndefinedArrayOffset */
         [, $pageId] = explode('.', $config['_key'], 2);
@@ -246,13 +228,8 @@ ORDER BY
 SQL;
     }
 
-    /**
-     * @param array<string,mixed> $config
-     * @param int                 $index
-     *
-     * @return void
-     */
-    protected static function addModuleSelect(stdClass $context, array $config, $index)
+    /** @param array<string,mixed> $config */
+    protected static function addModuleSelect(stdClass $context, array $config, int $index): void
     {
         /** @psalm-suppress PossiblyUndefinedArrayOffset */
         [, $moduleId] = explode('.', $config['_key'], 2);
@@ -260,15 +237,15 @@ SQL;
         $context->params['module'][] = $index;
         $context->params['module'][] = $moduleId;
 
-        $context->selects['module'][] = <<<SQL
+        $context->selects['module'][] = <<<'SQL'
 SELECT
-	?			AS hofff_content_index,
-	module.*
+    ?           AS hofff_content_index,
+    module.*
 FROM
-	tl_module
-	AS module
+    tl_module
+    AS module
 WHERE
-	module.id = ?
+    module.id = ?
 SQL;
     }
 }

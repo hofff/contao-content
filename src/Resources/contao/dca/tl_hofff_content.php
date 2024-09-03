@@ -89,7 +89,6 @@ $GLOBALS['TL_DCA']['tl_hofff_content'] = [
         ],
         'type'                  => [
             'inputType' => 'radio',
-            'options'   => ['article', 'page', 'module'],
             'eval'      => [
                 'includeBlankOption' => true,
                 'submitOnChange'     => true,
@@ -97,7 +96,7 @@ $GLOBALS['TL_DCA']['tl_hofff_content'] = [
                 'tl_class'           => 'w50',
             ],
             'reference' => &$GLOBALS['TL_LANG']['tl_hofff_content']['types'],
-            'sql'       => ['type' => Types::STRING, 'length' => 8, 'default' => ''],
+            'sql'       => ['type' => Types::STRING, 'length' => 16, 'default' => ''],
         ],
         'article'               => [
             'exclude'    => true,

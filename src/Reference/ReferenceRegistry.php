@@ -6,6 +6,7 @@ namespace Hofff\Contao\Content\Reference;
 
 use InvalidArgumentException;
 
+use function array_keys;
 use function sprintf;
 
 final class ReferenceRegistry
@@ -19,6 +20,12 @@ final class ReferenceRegistry
         foreach ($types as $type) {
             $this->types[$type->name()] = $type;
         }
+    }
+
+    /** @return list<string> */
+    public function names(): array
+    {
+        return array_keys($this->types);
     }
 
     public function get(string $type): Reference

@@ -113,4 +113,11 @@ final readonly class ReferencesDcaListener
 
         return array_merge($defaultSections, $sections);
     }
+
+    /** @return list<string> */
+    #[AsCallback('tl_hofff_content', 'fields.type.options')]
+    public function typeOptions(): array
+    {
+        return $this->referenceRegistry->names();
+    }
 }

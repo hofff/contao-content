@@ -9,7 +9,6 @@ use Contao\CoreBundle\Migration\MigrationResult;
 use Contao\StringUtil;
 use Doctrine\DBAL\Connection;
 
-use function dd;
 use function explode;
 use function time;
 
@@ -46,7 +45,7 @@ final class ConfigurationMigration extends AbstractMigration
         }
 
         $result = $this->connection->executeQuery(
-            'SELECT count(*) as count FROM ' .  $table . ' WHERE type=:type AND hofff_content_references IS NOT NULL',
+            'SELECT count(*) as count FROM ' . $table . ' WHERE type=:type AND hofff_content_references IS NOT NULL',
             ['type' => 'hofff_content_references'],
         );
 
@@ -61,21 +60,22 @@ final class ConfigurationMigration extends AbstractMigration
 
         $result = $this->connection->executeQuery(
             'SELECT * FROM ' . $table . ' WHERE type=:type AND hofff_content_references IS NOT NULL',
-            ['type' => 'hofff_content_references']
+            ['type' => 'hofff_content_references'],
         );
 
         foreach ($result->fetchAllAssociative() as $row) {
             $references = StringUtil::deserialize($row['hofff_content_references'], true);
             $sorting    = 0;
             foreach ($references as $reference) {
-                $sorting = $this->createReference($table, $row['id'], $reference, $sorting);
+                $sorting = $this->createReference($table, (int) $row['id'], $reference, $sorting);
             }
 
             $this->connection->update($table, ['hofff_content_references' => null], ['id' => $row['id']]);
         }
     }
 
-    private function createReference(string $table, $parentId, array $reference, int $sorting): int
+    /** @param array<string, mixed> $reference */
+    private function createReference(string $table, int $parentId, array $reference, int $sorting): int
     {
         [$type, $referenceId] = explode('.', $reference['_key']);
 

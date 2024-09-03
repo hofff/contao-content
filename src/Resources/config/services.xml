@@ -68,6 +68,7 @@
         <service id="Hofff\Contao\Content\Reference\ModuleReference">
             <argument type="service" id="database_connection"/>
             <argument type="service" id="translator"/>
+            <argument type="service" id="contao.framework"/>
             <tag name="Hofff\Contao\Content\Reference\Reference"/>
         </service>
 

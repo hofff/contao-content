@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hofff\Contao\Content\Reference;
 
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Model\Registry;
 use Contao\ModuleModel;
 use Doctrine\DBAL\Connection;
@@ -16,8 +17,11 @@ final class ModuleReference extends RelatedReference implements CreatesRenderer,
 {
     use ConfigureRenderer;
 
-    public function __construct(Connection $connection, private readonly TranslatorInterface $translator)
-    {
+    public function __construct(
+        Connection $connection,
+        private readonly TranslatorInterface $translator,
+        private readonly ContaoFramework $contaoFramework,
+    ) {
         parent::__construct($connection);
     }
 
@@ -41,7 +45,7 @@ final class ModuleReference extends RelatedReference implements CreatesRenderer,
             $module->setRow($reference);
         }
 
-        $renderer = new ModuleRenderer();
+        $renderer = new ModuleRenderer($this->contaoFramework);
         $renderer->setModule($module);
 
         $this->configureRenderer($renderer, $config);

@@ -13,7 +13,7 @@ use function rtrim;
 use function str_repeat;
 use function vsprintf;
 
-class QueryUtil
+final class QueryUtil
 {
     /**
      * @param array<mixed>|null $placeholders
@@ -26,9 +26,10 @@ class QueryUtil
         return Database::getInstance()->prepare($sql)->execute($params);
     }
 
-    public static function wildcards(mixed $params, string $wildcard = '?'): string
+    /** @param list<mixed> $params */
+    public static function wildcards(array $params, string $wildcard = '?'): string
     {
-        return rtrim(str_repeat($wildcard . ',', count((array) $params)), ',');
+        return rtrim(str_repeat($wildcard . ',', count($params)), ',');
     }
 
     /**

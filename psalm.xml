@@ -8,21 +8,10 @@
         <DeprecatedClass>
             <errorLevel type="suppress">
                 <!-- We need a new major version to get rid of it -->
-                <referencedClass name="Contao\ModuleLoader"/>
                 <referencedClass name="Contao\RequestToken"/>
                 <referencedClass name="Hofff\Contao\LanguageRelations\LanguageRelations"/>
             </errorLevel>
         </DeprecatedClass>
-        <DeprecatedMethod>
-            <errorLevel type="suppress">
-                <!-- We need a new major version to get rid of it -->
-                <referencedMethod name="Contao\ModuleLoader::getActive"/>
-                <!-- We support Symfony 4.4 and cannot blindly follow Symfony approach to build a better world here -->
-                <referencedMethod name="Symfony\Component\HttpFoundation\RequestStack::getMasterRequest"/>
-                <!-- We support Contao 4.9 The InsertTagParser is introduced in Contao 4.13 -->
-                <referencedMethod name="Contao\Controller::replaceInsertTags"/>
-            </errorLevel>
-        </DeprecatedMethod>
         <InternalMethod>
             <errorLevel type="suppress">
                 <referencedMethod name="Contao\CoreBundle\Framework\Adapter::__call"/>
@@ -36,6 +25,7 @@
         <class name="Contao\Database\Result"/>
         <class name="Contao\Model"/>
         <class name="Contao\Template"/>
+        <class name="Contao\BackendTemplate"/>
         <class name="Contao\Widget"/>
     </universalObjectCrates>
 </psalm>

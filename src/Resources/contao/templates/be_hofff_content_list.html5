@@ -1,0 +1,13 @@
+<table class="tl_listing showColumns">
+    <tbody>
+    <?php foreach ($this->rows as $row): ?>
+        <tr class="hover-row">
+            <td class="tl_file_list"><?= $this->generateLabel($row) ?></td>
+            <td class="tl_file_list tl_right_nowrap">
+                <?php foreach ($this->operations as $operation): ?>
+                    <?= $this->generateOperation($operation, $row) ?><?php endforeach; ?>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use Contao\CoreBundle\DataContainer\PaletteManipulator;
-use Hofff\Contao\Content\DCA\ArticleDCA;
+use Hofff\Contao\Content\EventListener\ArticleDcaListener;
 
 (static function (): void {
     PaletteManipulator::create()
@@ -16,8 +16,8 @@ use Hofff\Contao\Content\DCA\ArticleDCA;
         . ',hofff_content_page_filter_strategy,hofff_content_page_filter_inheritance';
 
     $label                                 = &$GLOBALS['TL_DCA']['tl_article']['list']['label'];
-    $label['label_callback_hofff_content'] = $label['label_callback'];
-    $label['label_callback']               = [ArticleDCA::class, 'labelCallback'];
+    $label['label_callback_hofff_content'] = $label['label_callback'] ?? null;
+    $label['label_callback']               = [ArticleDcaListener::class, 'labelCallback'];
     unset($label);
 }
 )();

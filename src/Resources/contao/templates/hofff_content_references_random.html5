@@ -6,12 +6,12 @@ shuffle($renderers);
     <?php if($this->style): ?>style="<?= $this->style ?>"<?php endif; ?>
 >
   <?php foreach($renderers as $renderer): ?>
-    <?php $id = $renderer->getCSSID(); ?>
-    <li class="<?= $renderer->getCSSClasses() ?> block"
+    <?php $id = $renderer->getCssId(); ?>
+    <li class="<?= $renderer->getCssClasses() ?> block"
         <?php if($id !== null): ?>id="<?= $id ?>"<?php endif; ?>
     >
-      <?php $renderer->setCSSClasses(null); ?>
-      <?php $renderer->setCSSID(null); ?>
+      <?php $renderer->setCssClasses(null); ?>
+      <?php $renderer->setCssId(null); ?>
       <?= $renderer->render() ?>
     </li>
   <?php endforeach; ?>

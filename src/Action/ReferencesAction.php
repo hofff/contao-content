@@ -4,16 +4,17 @@ declare(strict_types=1);
 
 namespace Hofff\Contao\Content\Action;
 
-use Contao\Controller;
 use Contao\CoreBundle\Fragment\FragmentConfig;
 use Contao\CoreBundle\Fragment\FragmentPreHandlerInterface;
 use Contao\CoreBundle\Fragment\Reference\FragmentReference;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\FrontendTemplate;
 use Contao\Model;
 use Contao\PageModel;
 use Contao\StringUtil;
+use Doctrine\DBAL\Connection;
 use FOS\HttpCacheBundle\Http\SymfonyResponseTagger;
 use Hofff\Contao\Content\Renderer\Renderer;
 use Hofff\Contao\Content\Renderer\RendererFactory;
@@ -25,7 +26,6 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 
 use function count;
-use function defined;
 use function implode;
 use function is_array;
 use function trim;
@@ -34,7 +34,7 @@ use function trim;
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  * @SuppressWarnings(PHPMD.LongVariable)
  */
-abstract class AbstractReferencesAction implements FragmentPreHandlerInterface
+abstract class ReferencesAction implements FragmentPreHandlerInterface
 {
     /** @SuppressWarnings(PHPMD.LongVariable) */
     public function __construct(
@@ -44,6 +44,9 @@ abstract class AbstractReferencesAction implements FragmentPreHandlerInterface
         private readonly PageContextInitializer $pageContextInitializer,
         private readonly SymfonyResponseTagger|null $responseTagger,
         private readonly RequestStack $requestStack,
+        private readonly RendererFactory $rendererFactory,
+        private readonly Connection $connection,
+        private readonly InsertTagParser $insertTagParser,
     ) {
     }
 
@@ -106,7 +109,7 @@ abstract class AbstractReferencesAction implements FragmentPreHandlerInterface
 
     protected function initializePageContext(Request $request, Model $model, PageModel|null $pageModel): void
     {
-        if ($this->requestStack->getMasterRequest() !== $request) {
+        if ($this->requestStack->getMainRequest() !== $request) {
             return;
         }
 
@@ -121,7 +124,15 @@ abstract class AbstractReferencesAction implements FragmentPreHandlerInterface
     /** @return Renderer[] */
     private function createRenderer(Model $model, string $section): array
     {
-        $renderers = RendererFactory::createAll($model->hofff_content_references, $section);
+        $result = $this->connection->executeQuery(
+            'SELECT * FROM tl_hofff_content WHERE pid=:pid AND ptable=:ptable ORDER BY sorting',
+            [
+                'pid' => $model->id,
+                'ptable' => $model::getTable(),
+            ],
+        );
+
+        $renderers = $this->rendererFactory->createAll($result->fetchAllAssociative(), $section);
 
         if ($model->hofff_content_exclude_from_search) {
             foreach ($renderers as $renderer) {
@@ -195,9 +206,8 @@ abstract class AbstractReferencesAction implements FragmentPreHandlerInterface
         // Do not cache the response if a user is logged in or the page is protected
         // TODO: Add support for proxies so they can vary on member context
         if (
-            (defined('FE_USER_LOGGED_IN') && FE_USER_LOGGED_IN === true)
-            || (defined('BE_USER_LOGGED_IN') && BE_USER_LOGGED_IN === true)
-            || (bool) $pageModel->protected
+            (bool) $pageModel->protected
+            || $this->tokenChecker->hasFrontendUser()
             || $this->tokenChecker->hasBackendUser()
         ) {
             $response->headers->addCacheControlDirective('no-cache');
@@ -231,9 +241,7 @@ abstract class AbstractReferencesAction implements FragmentPreHandlerInterface
     protected function replaceInsertTags(Model $model, string $content): string
     {
         if ($model->hofff_content_bypass_cache) {
-            $controllerAdapter = $this->contaoFramework->getAdapter(Controller::class);
-            $content           = $controllerAdapter->replaceInsertTags($content);
-            $content           = $controllerAdapter->replaceInsertTags($content, false);
+            return $this->insertTagParser->replace($content);
         }
 
         return $content;

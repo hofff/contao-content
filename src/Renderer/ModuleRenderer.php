@@ -6,14 +6,9 @@ namespace Hofff\Contao\Content\Renderer;
 
 use Contao\ModuleModel;
 
-class ModuleRenderer extends AbstractRenderer
+final class ModuleRenderer extends AbstractRenderer
 {
     private ModuleModel|null $module = null;
-
-    public function __construct()
-    {
-        parent::__construct();
-    }
 
     public function getModule(): ModuleModel|null
     {

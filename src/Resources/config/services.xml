@@ -4,15 +4,18 @@
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
-        <defaults public="false" autoconfigure="false" autowire="false" />
+        <defaults public="false" autoconfigure="true" autowire="false" />
 
         <service id="Hofff\Contao\Content\Action\ContentReferencesAction">
             <argument type="service" id="contao.security.token_checker" />
             <argument type="service" id="contao.framework" />
             <argument type="service" id="Netzmacht\Contao\PageContext\Request\PageContextFactory" />
             <argument type="service" id="Netzmacht\Contao\PageContext\Request\PageContextInitializer" />
-            <argument />
+            <argument type="service" id="fos_http_cache.http.symfony_response_tagger" on-invalid="null"/>
             <argument type="service" id="request_stack" />
+            <argument type="service" id="Hofff\Contao\Content\Renderer\RendererFactory"/>
+            <argument type="service" id="database_connection"/>
+            <argument type="service" id="contao.insert_tag.parser"/>
             <tag name="contao.content_element" category="includes" type="hofff_content_references" renderer="forward" />
         </service>
 
@@ -21,9 +24,66 @@
             <argument type="service" id="contao.framework" />
             <argument type="service" id="Netzmacht\Contao\PageContext\Request\PageContextFactory" />
             <argument type="service" id="Netzmacht\Contao\PageContext\Request\PageContextInitializer" />
-            <argument />
+            <argument type="service" id="fos_http_cache.http.symfony_response_tagger" on-invalid="null"/>
             <argument type="service" id="request_stack" />
+            <argument type="service" id="Hofff\Contao\Content\Renderer\RendererFactory"/>
+            <argument type="service" id="database_connection"/>
+            <argument type="service" id="contao.insert_tag.parser"/>
             <tag name="contao.frontend_module" category="miscellaneous" type="hofff_content_references" renderer="forward" />
+        </service>
+
+        <service id="Hofff\Contao\Content\EventListener\HookListener">
+            <argument type="service" id="contao.framework"/>
+        </service>
+
+        <service id="Hofff\Contao\Content\EventListener\ReferencesDcaListener" public="true">
+            <argument type="service" id="database_connection"/>
+            <argument type="service" id="request_stack"/>
+            <argument type="service" id="Hofff\Contao\Content\Reference\ReferenceRegistry"/>
+        </service>
+
+        <service id="Hofff\Contao\Content\Migration\DeleteContentTreeViewMigration">
+            <argument type="service" id="database_connection"/>
+            <tag name="contao.migration"/>
+        </service>
+
+        <service id="Hofff\Contao\Content\Reference\ReferenceRegistry">
+            <argument type="tagged_iterator" tag="Hofff\Contao\Content\Reference\Reference"/>
+        </service>
+
+        <service id="Hofff\Contao\Content\Reference\ArticleReference">
+            <argument type="service" id="database_connection"/>
+            <argument type="service" id="Hofff\Contao\Content\Util\ContaoUtil"/>
+            <argument type="service" id="translator"/>
+            <argument type="service" id="contao.security.token_checker"/>
+            <tag name="Hofff\Contao\Content\Reference\Reference"/>
+        </service>
+
+        <service id="Hofff\Contao\Content\Reference\ModuleReference">
+            <argument type="service" id="database_connection"/>
+            <argument type="service" id="translator"/>
+            <tag name="Hofff\Contao\Content\Reference\Reference"/>
+        </service>
+
+        <service id="Hofff\Contao\Content\Reference\PageReference">
+            <argument type="service" id="database_connection"/>
+            <argument type="service" id="Hofff\Contao\Content\Util\LanguageRelationDetector"/>
+            <tag name="Hofff\Contao\Content\Reference\Reference"/>
+        </service>
+
+        <service id="Hofff\Contao\Content\Renderer\RendererFactory">
+            <argument type="service" id="database_connection"/>
+            <argument type="service" id="Hofff\Contao\Content\Reference\ReferenceRegistry"/>
+        </service>
+
+        <service id="Hofff\Contao\Content\Util\ContaoUtil">
+            <argument type="service" id="contao.security.token_checker"/>
+            <argument type="service" id="contao.routing.scope_matcher"/>
+            <argument type="service" id="request_stack"/>
+        </service>
+
+        <service id="Hofff\Contao\Content\Util\LanguageRelationDetector">
+            <argument>%kernel.bundles%</argument>
         </service>
     </services>
 </container>

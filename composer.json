@@ -32,12 +32,14 @@
   "require": {
     "php": "^8.2",
     "contao/core-bundle": "^4.13 || ^5.3",
-    "hofff/contao-selectri": "^4.0",
+    "doctrine/dbal": "^3.8.0",
     "netzmacht/contao-page-context": "^1.0",
     "symfony/config": "^5.4 || ^6.4",
     "symfony/dependency-injection": "^5.4 || ^6.4",
     "symfony/http-foundation": "^5.4 || ^6.4",
-    "symfony/http-kernel": "^5.4 || ^6.4"
+    "symfony/http-kernel": "^5.4 || ^6.4",
+    "symfony/translation-contracts": "^1.0 || ^2.0 || ^3.0",
+    "terminal42/dcawizard": "^3.0"
   },
   "require-dev": {
     "contao/manager-plugin": "^2.1",

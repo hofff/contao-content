@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Hofff\Contao\Content\DCA;
+namespace Hofff\Contao\Content\EventListener;
 
 use Contao\System;
 
@@ -10,7 +10,7 @@ use function call_user_func_array;
 use function func_get_args;
 use function sprintf;
 
-class ArticleDCA
+final class ArticleDcaListener
 {
     /**
      * @param array<string,mixed> $row

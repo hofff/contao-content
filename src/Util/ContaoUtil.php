@@ -5,17 +5,17 @@ declare(strict_types=1);
 namespace Hofff\Contao\Content\Util;
 
 use Contao\BackendTemplate;
+use Contao\CoreBundle\Routing\ScopeMatcher;
+use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\Date;
 use Contao\FrontendTemplate;
 use Contao\Image;
-use Contao\ModuleLoader;
 use Contao\RequestToken;
 use Contao\Template;
 use Contao\Widget;
+use Symfony\Component\HttpFoundation\RequestStack;
 
-use function defined;
 use function http_build_query;
-use function in_array;
 use function sprintf;
 use function str_replace;
 use function strlen;
@@ -28,10 +28,17 @@ final class ContaoUtil
     /** @var list<string> */
     private static array $indexerTokens = [self::INDEXER_STOP, self::INDEXER_CONTINUE];
 
-    public static function isPublished(object $model, bool $checkBackendUser = true): bool
+    public function __construct(
+        private readonly TokenChecker $tokenChecker,
+        private readonly ScopeMatcher $scopeMatcher,
+        private readonly RequestStack $requestStack,
+    ) {
+    }
+
+    public function isPublished(object $model, bool $checkBackendUser = true): bool
     {
         /** @psalm-suppress UndefinedConstant */
-        if ($checkBackendUser && defined('BE_USER_LOGGED_IN') && BE_USER_LOGGED_IN) {
+        if ($checkBackendUser && $this->tokenChecker->hasBackendUser()) {
             return true;
         }
 
@@ -49,17 +56,20 @@ final class ContaoUtil
         }
 
         $content = str_replace(self::$indexerTokens, '', $content);
-        $content = self::INDEXER_STOP . $content . self::INDEXER_CONTINUE;
 
-        return $content;
+        return self::INDEXER_STOP . $content . self::INDEXER_CONTINUE;
     }
 
     /** @param array<string,mixed> $data */
-    public static function createTemplate(string $tpl, array|null $data = null): Template
+    public function createTemplate(string $tpl, array|null $data = null): Template
     {
-        $class    = defined('TL_MODE') && TL_MODE === 'FE' ? FrontendTemplate::class : BackendTemplate::class;
+        $request = $this->requestStack->getCurrentRequest();
+        $class   = $request && $this->scopeMatcher->isFrontendRequest($request)
+            ? FrontendTemplate::class
+            : BackendTemplate::class;
+
         $template = new $class($tpl);
-        $data && $template->setData($data);
+        $template->setData($data ?? []);
 
         return $template;
     }
@@ -95,18 +105,12 @@ final class ContaoUtil
         $query       = http_build_query($query, '', '&amp;');
 
         return sprintf(
-            '<a href="contao/main.php?%s" title="%s" data-title="%s" class="hofff-content-edit">%s %s</a>',
+            '<a href="contao?%s" title="%s" data-title="%s" class="hofff-content-edit">%s %s</a>',
             $query,
             $title,
             $title,
             Image::getHtml($image, $title),
             $label[0],
         );
-    }
-
-    /** @deprecated */
-    public static function isModuleLoaded(string $module): bool
-    {
-        return in_array($module, ModuleLoader::getActive());
     }
 }

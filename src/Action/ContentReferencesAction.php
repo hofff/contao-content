@@ -10,7 +10,7 @@ use Contao\PageModel;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-final class ContentReferencesAction extends AbstractReferencesAction
+final class ContentReferencesAction extends ReferencesAction
 {
     /** {@inheritDoc} */
     public function __invoke(

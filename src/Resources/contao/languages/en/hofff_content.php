@@ -32,6 +32,10 @@ $GLOBALS['TL_LANG']['hofff_content']['translate'][1] = 'Use the articles of the 
 $GLOBALS['TL_LANG']['hofff_content']['source_sections'][0] = 'Layout sections';
 $GLOBALS['TL_LANG']['hofff_content']['source_sections'][1] = 'The layout section from which the articles should be displayed.';
 
+$GLOBALS['TL_LANG']['hofff_content']['template'][0] = 'Template';
+$GLOBALS['TL_LANG']['hofff_content']['template'][1] = 'The selected template defines, how the articles are rendered. Selecting'
+    . ' no template will render them directly one after another.';
+
 $GLOBALS['TL_LANG']['hofff_content']['show_content'][0]  = 'Show content elements';
 $GLOBALS['TL_LANG']['hofff_content']['show_content'][1]  = 'Content elements of article ID %s';
 $GLOBALS['TL_LANG']['hofff_content']['edit_article'][0]  = 'Edit article';
@@ -45,6 +49,3 @@ $GLOBALS['TL_LANG']['hofff_content']['edit_module'][1]   = 'Edit module ID %s';
 
 $GLOBALS['TL_LANG']['hofff_content']['suggestions'] = 'Recently edited elements';
 
-$GLOBALS['TL_LANG']['hofff_content']['template'][0] = 'Template';
-$GLOBALS['TL_LANG']['hofff_content']['template'][1] = 'The selected template defines, how the articles are rendered. Selecting'
-    . ' no template will render them directly one after another.';

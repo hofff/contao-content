@@ -8,6 +8,7 @@ use Hofff\Contao\Content\Util\ContaoUtil;
 
 use function trim;
 
+// phpcs:ignore SlevomatCodingStandard.Classes.SuperfluousAbstractClassNaming.SuperfluousPrefix
 abstract class AbstractRenderer implements Renderer
 {
     /** @var array<string,bool> */
@@ -21,7 +22,7 @@ abstract class AbstractRenderer implements Renderer
 
     private string|null $cssId = null;
 
-    protected function __construct()
+    public function __construct()
     {
         $this->column            = 'main';
         $this->excludeFromSearch = false;
@@ -32,11 +33,6 @@ abstract class AbstractRenderer implements Renderer
         return $this->column;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @psalm-suppress RedundantCastGivenDocblockType
-     */
     public function setColumn(string $column): void
     {
         $this->column = $column;
@@ -47,11 +43,6 @@ abstract class AbstractRenderer implements Renderer
         return $this->excludeFromSearch;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @psalm-suppress RedundantCastGivenDocblockType
-     */
     public function setExcludeFromSearch(bool $exclude): void
     {
         $this->excludeFromSearch = $exclude;
@@ -62,21 +53,11 @@ abstract class AbstractRenderer implements Renderer
         return $this->cssClasses;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @psalm-suppress RedundantCastGivenDocblockType
-     */
     public function setCssClasses(string|null $classes): void
     {
         $this->cssClasses = $classes === null || $classes === '' ? null : $classes;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @psalm-suppress RedundantCastGivenDocblockType
-     */
     public function addCssClasses(string|null $classes): void
     {
         if ($classes === null || $classes === '') {
@@ -97,7 +78,6 @@ abstract class AbstractRenderer implements Renderer
         return $this->cssId;
     }
 
-    /** @psalm-suppress RedundantCastGivenDocblockType */
     public function setCssId(string|null $cssId): void
     {
         $this->cssId = $cssId === null || $cssId === '' ? null : $cssId;

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Hofff\Contao\Content\Renderer;
 
 use Contao\ArticleModel;
+use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\Date;
 use Contao\FrontendUser;
 use Contao\ModuleArticle;
@@ -14,17 +15,16 @@ use Contao\System;
 use function array_intersect;
 use function call_user_func;
 use function count;
-use function defined;
 use function in_array;
 use function is_array;
 
-class ArticleRenderer extends AbstractRenderer
+final class ArticleRenderer extends AbstractRenderer
 {
     private ArticleModel|null $article = null;
 
     private bool $renderContainer;
 
-    public function __construct()
+    public function __construct(private readonly TokenChecker $tokenChecker)
     {
         parent::__construct();
 
@@ -73,12 +73,12 @@ class ArticleRenderer extends AbstractRenderer
         }
 
         /** @psalm-suppress UndefinedConstant */
-        if ($this->article->guests && defined('FE_USER_LOGGED_IN') && FE_USER_LOGGED_IN) {
+        if ($this->article->guests && $this->tokenChecker->hasFrontendUser()) {
             return false;
         }
 
         if ($this->article->protected) {
-            if (defined('FE_USER_LOGGED_IN') && ! FE_USER_LOGGED_IN) {
+            if (! $this->tokenChecker->isPreviewMode()) {
                 return false;
             }
 

@@ -1,16 +1,4 @@
 
-.hofff-content .hofff-selectri-content {
-  display: none;
-  box-sizing: border-box;
-  padding: 10px;
-  clear: both;
-  width: 100%;
-}
-
-.hofff-content .hofff-selectri-selection .hofff-selectri-content {
-  display: table;
-}
-
 .hofff-content-edit {
   padding-right: 10px;
 }
@@ -23,6 +11,6 @@
   color: #b3b3b3;
 }
 
-.hofff-selectri-path .hofff-content-label {
-  display: none;
+.hofff-content-error {
+  color: #c33;
 }

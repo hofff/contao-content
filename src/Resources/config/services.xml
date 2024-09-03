@@ -40,6 +40,7 @@
             <argument type="service" id="database_connection"/>
             <argument type="service" id="request_stack"/>
             <argument type="service" id="Hofff\Contao\Content\Reference\ReferenceRegistry"/>
+            <argument type="service" id="translator"/>
         </service>
 
         <service id="Hofff\Contao\Content\Migration\DeleteContentTreeViewMigration">

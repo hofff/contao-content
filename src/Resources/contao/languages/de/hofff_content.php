@@ -18,3 +18,5 @@ $GLOBALS['TL_LANG']['hofff_content']['template'][1] = 'Mit diesem Template kann 
     . ' Zum Beispiel fügt das Template "hofff_content_container" einen gemeinsamen'
     . ' "div"-Container um alle Artikel herum. Wird kein Template gewählt werden'
     . ' die Artikel hintereinanderweg ausgegeben.';
+
+$GLOBALS['TL_LANG']['ERR']['hoffContentUnknownType'] = 'Unbekannter Referenztyp';

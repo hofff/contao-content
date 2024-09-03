@@ -11,7 +11,9 @@ use Contao\Image;
 use Contao\StringUtil;
 use Doctrine\DBAL\Connection;
 use Hofff\Contao\Content\Reference\ReferenceRegistry;
+use InvalidArgumentException;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Terminal42\DcawizardBundle\Widget\DcaWizard;
 
 use function array_merge;
@@ -25,6 +27,7 @@ final readonly class ReferencesDcaListener
         private Connection $connection,
         private RequestStack $requestStack,
         private ReferenceRegistry $referenceRegistry,
+        private TranslatorInterface $translator,
     ) {
     }
 
@@ -66,7 +69,14 @@ final readonly class ReferencesDcaListener
     #[AsCallback('tl_hofff_content', 'list.label.label')]
     public function onLabel(array $row): string
     {
-        $reference = $this->referenceRegistry->get($row['type']);
+        try {
+            $reference = $this->referenceRegistry->get($row['type']);
+        } catch (InvalidArgumentException) {
+            return Image::getHtml('error.svg')
+                . ' <span class="hofff-content-error">'
+                . $this->translator->trans('ERR.hoffContentUnknownType', [], 'contao_default')
+                . '</span>';
+        }
 
         return Image::getHtml($reference->backendIcon($row)) . ' ' . $reference->backendLabel($row);
     }

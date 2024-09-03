@@ -17,3 +17,4 @@ $GLOBALS['TL_LANG']['hofff_content']['template'][0] = 'Template';
 $GLOBALS['TL_LANG']['hofff_content']['template'][1] = 'The selected template defines, how the articles are rendered. Selecting'
     . ' no template will render them directly one after another.';
 
+$GLOBALS['TL_LANG']['ERR']['hoffContentUnknownType'] = 'Unknown reference type';

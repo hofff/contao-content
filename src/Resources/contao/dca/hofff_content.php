@@ -21,7 +21,6 @@ $GLOBALS['TL_DCA']['hofff_content']['fields']['hofff_content_references'] = [
         'showOperations' => true,
         'list_callback' => [ReferencesDcaListener::class, 'referencesList'],
     ],
-    'sql'               => 'blob NULL',
 ];
 
 $GLOBALS['TL_DCA']['hofff_content']['fields']['hofff_content_template'] = [

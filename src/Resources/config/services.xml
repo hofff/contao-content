@@ -47,6 +47,11 @@
             <tag name="contao.migration"/>
         </service>
 
+        <service id="Hofff\Contao\Content\Migration\ConfigurationMigration">
+            <argument type="service" id="database_connection"/>
+            <tag name="contao.migration"/>
+        </service>
+
         <service id="Hofff\Contao\Content\Reference\ReferenceRegistry">
             <argument type="tagged_iterator" tag="Hofff\Contao\Content\Reference\Reference"/>
         </service>

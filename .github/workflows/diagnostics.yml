@@ -17,11 +17,9 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - php: 7.4
-            phpcq_install: 'install'
-          - php: 8.0
+          - php: 8.2
             phpcq_install: 'update'
-          - php: 8.1
+          - php: 8.3
             phpcq_install: 'update'
 
     steps:

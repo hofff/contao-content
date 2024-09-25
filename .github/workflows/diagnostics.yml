@@ -24,7 +24,7 @@ jobs:
 
     steps:
       - name: Pull source
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Setup PHP with PECL extension
         uses: shivammathur/setup-php@v2
@@ -40,7 +40,7 @@ jobs:
           key: ${{ runner.os }}-build-${{ env.cache-name }}
 
       - name: Cache vendor directory
-        uses: actions/cache@v1
+        uses: actions/cache@v3
         env:
           cache-name: vendor-${{ matrix.php }}
         with:
@@ -50,7 +50,7 @@ jobs:
             ${{ runner.os }}-build-${{ env.cache-name }}-
 
       - name: Cache phpcq directory
-        uses: actions/cache@v1
+        uses: actions/cache@v3
         env:
           cache-name: phpcq-${{ matrix.php }}
         with:

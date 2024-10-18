@@ -75,6 +75,7 @@
         <service id="Hofff\Contao\Content\Reference\PageReference">
             <argument type="service" id="database_connection"/>
             <argument type="service" id="Hofff\Contao\Content\Util\LanguageRelationDetector"/>
+            <argument type="service" id="contao.security.token_checker"/>
             <tag name="Hofff\Contao\Content\Reference\Reference"/>
         </service>
 

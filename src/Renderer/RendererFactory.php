@@ -7,6 +7,7 @@ namespace Hofff\Contao\Content\Renderer;
 use Doctrine\DBAL\Connection;
 use Hofff\Contao\Content\Reference\CreatesRenderer;
 use Hofff\Contao\Content\Reference\CreatesSelect;
+use Hofff\Contao\Content\Reference\ProvidesOrderClause;
 use Hofff\Contao\Content\Reference\ReferenceRegistry;
 
 use function array_map;
@@ -57,7 +58,12 @@ final readonly class RendererFactory
             $queries = array_map(static fn (Select $select) => $select->sql, $selects);
             $params  = array_merge(...array_map(static fn (Select $select) => $select->params, $selects));
             $sql     = '(' . implode(') UNION ALL (', $queries) . ')';
-            $result  = $this->connection->executeQuery($sql, $params);
+
+            if ($reference instanceof ProvidesOrderClause) {
+                $sql .= ' ORDER BY ' . $reference->orderClause();
+            }
+
+            $result = $this->connection->executeQuery($sql, $params);
 
             while ($row = $result->fetchAssociative()) {
                 $i = $row['hofff_content_index'];

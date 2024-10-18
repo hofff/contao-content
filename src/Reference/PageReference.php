@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Hofff\Contao\Content\Reference;
 
 use Contao\Controller;
+use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\StringUtil;
 use Doctrine\DBAL\Connection;
 use Hofff\Contao\Content\Renderer\Select;
@@ -15,11 +16,14 @@ use Hofff\Contao\LanguageRelations\LanguageRelations;
 use function array_merge;
 use function array_values;
 
-final class PageReference extends RelatedReference implements CreatesSelect
+final class PageReference extends RelatedReference implements CreatesSelect, CreatesRenderer, ProvidesOrderClause
 {
+    use CreateArticleRender;
+
     public function __construct(
         Connection $connection,
         private readonly LanguageRelationDetector $langRelationDetector,
+        private readonly TokenChecker $tokenChecker,
     ) {
         parent::__construct($connection);
     }
@@ -80,11 +84,14 @@ WHERE
     article.pid = ?
 $targetCondition
 $sourceCondition
-ORDER BY
-    article.sorting
 SQL;
 
-        return new Select('article', $sql, $params);
+        return new Select('page', $sql, $params);
+    }
+
+    public function orderClause(): string
+    {
+        return 'hofff_content_index, sorting';
     }
 
     protected function labelColumn(): string

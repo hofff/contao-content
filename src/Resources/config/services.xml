@@ -32,6 +32,14 @@
             <tag name="contao.frontend_module" category="miscellaneous" type="hofff_content_references" renderer="forward" />
         </service>
 
+        <service id="Hofff\Contao\Content\EventListener\ContentDcaListener" autoconfigure="true">
+            <argument type="service" id="database_connection"/>
+        </service>
+
+        <service id="Hofff\Contao\Content\EventListener\ModuleDcaListener" autoconfigure="true">
+            <argument type="service" id="database_connection"/>
+        </service>
+
         <service id="Hofff\Contao\Content\EventListener\HookListener">
             <argument type="service" id="contao.framework"/>
         </service>

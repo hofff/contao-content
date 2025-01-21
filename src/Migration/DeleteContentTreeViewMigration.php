@@ -17,8 +17,9 @@ final class DeleteContentTreeViewMigration extends AbstractMigration
     public function shouldRun(): bool
     {
         $result = $this->connection->executeQuery('SHOW TABLES LIKE ?', ['hofff_content_tree']);
+        $data   = $result->fetchAllAssociative();
 
-        return $result->rowCount() > 0;
+        return $data !== [];
     }
 
     public function run(): MigrationResult

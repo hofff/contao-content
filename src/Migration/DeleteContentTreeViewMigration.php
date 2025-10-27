@@ -7,6 +7,7 @@ namespace Hofff\Contao\Content\Migration;
 use Contao\CoreBundle\Migration\AbstractMigration;
 use Contao\CoreBundle\Migration\MigrationResult;
 use Doctrine\DBAL\Connection;
+use Override;
 
 final class DeleteContentTreeViewMigration extends AbstractMigration
 {
@@ -14,6 +15,7 @@ final class DeleteContentTreeViewMigration extends AbstractMigration
     {
     }
 
+    #[Override]
     public function shouldRun(): bool
     {
         $result = $this->connection->executeQuery('SHOW TABLES LIKE ?', ['hofff_content_tree']);
@@ -22,6 +24,7 @@ final class DeleteContentTreeViewMigration extends AbstractMigration
         return $data !== [];
     }
 
+    #[Override]
     public function run(): MigrationResult
     {
         $this->connection->executeStatement('DROP VIEW IF EXISTS hofff_content_tree');

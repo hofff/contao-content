@@ -7,6 +7,7 @@ namespace Hofff\Contao\Content\Renderer;
 use Contao\Controller;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\ModuleModel;
+use Override;
 
 final class ModuleRenderer extends AbstractRenderer
 {
@@ -27,11 +28,13 @@ final class ModuleRenderer extends AbstractRenderer
         $this->module = $module;
     }
 
+    #[Override]
     public function isValid(): bool
     {
         return (bool) $this->getModule();
     }
 
+    #[Override]
     protected function getCacheKey(): string
     {
         if ($this->module === null) {
@@ -41,6 +44,7 @@ final class ModuleRenderer extends AbstractRenderer
         return self::class . $this->module->id;
     }
 
+    #[Override]
     protected function doRender(): string
     {
         if ($this->module === null) {
@@ -52,6 +56,7 @@ final class ModuleRenderer extends AbstractRenderer
             ->getFrontendModule($this->module->id, $this->getColumn());
     }
 
+    #[Override]
     protected function isProtected(): bool
     {
         if ($this->module === null) {

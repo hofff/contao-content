@@ -11,6 +11,7 @@ use Contao\Date;
 use Contao\ModuleArticle;
 use Contao\StringUtil;
 use Contao\System;
+use Override;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Security as CoreSecurity;
 
@@ -60,6 +61,7 @@ final class ArticleRenderer extends AbstractRenderer
      * @SuppressWarnings(PHPMD.NPathComplexity)
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
+    #[Override]
     public function isValid(): bool
     {
         if (! $this->article) {
@@ -118,6 +120,7 @@ final class ArticleRenderer extends AbstractRenderer
         return $strategy !== 'whitelist';
     }
 
+    #[Override]
     protected function getCacheKey(): string
     {
         if ($this->article === null) {
@@ -127,6 +130,7 @@ final class ArticleRenderer extends AbstractRenderer
         return self::class . $this->article->id;
     }
 
+    #[Override]
     protected function doRender(): string
     {
         $article = $this->getArticle();
@@ -147,6 +151,7 @@ final class ArticleRenderer extends AbstractRenderer
         return $module->generate(! $this->getRenderContainer());
     }
 
+    #[Override]
     protected function isProtected(): bool
     {
         return $this->article && $this->article->protected;

@@ -14,7 +14,7 @@ use function sprintf;
 
 final class HookListener
 {
-    private const DATA_CONTAINERS = [
+    private const array DATA_CONTAINERS = [
         'tl_content' => '{type_legend},type'
             . '%s'
             . ';{protected_legend:hide},protected'

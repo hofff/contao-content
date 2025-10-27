@@ -8,6 +8,7 @@ use Contao\CoreBundle\Migration\AbstractMigration;
 use Contao\CoreBundle\Migration\MigrationResult;
 use Contao\StringUtil;
 use Doctrine\DBAL\Connection;
+use Override;
 
 use function explode;
 use function time;
@@ -18,11 +19,13 @@ final class ConfigurationMigration extends AbstractMigration
     {
     }
 
+    #[Override]
     public function shouldRun(): bool
     {
         return $this->shouldRunFor('tl_module') || $this->shouldRunFor('tl_content');
     }
 
+    #[Override]
     public function run(): MigrationResult
     {
         $this->migrate('tl_module');

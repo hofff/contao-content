@@ -21,6 +21,7 @@ use Hofff\Contao\Content\Renderer\RendererFactory;
 use Hofff\Contao\Content\Util\ContaoUtil;
 use Netzmacht\Contao\PageContext\Request\PageContextFactory;
 use Netzmacht\Contao\PageContext\Request\PageContextInitializer;
+use Override;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
@@ -50,6 +51,7 @@ abstract class ReferencesAction implements FragmentPreHandlerInterface
     ) {
     }
 
+    #[Override]
     public function preHandleFragment(FragmentReference $uri, FragmentConfig $config): void
     {
         $model = $this->loadModel($uri->attributes);

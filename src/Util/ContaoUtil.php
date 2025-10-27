@@ -22,8 +22,8 @@ use function strlen;
 
 final class ContaoUtil
 {
-    public const INDEXER_STOP     = '<!-- indexer::stop -->';
-    public const INDEXER_CONTINUE = '<!-- indexer::continue -->';
+    public const string INDEXER_STOP     = '<!-- indexer::stop -->';
+    public const string INDEXER_CONTINUE = '<!-- indexer::continue -->';
 
     /** @var list<string> */
     private static array $indexerTokens = [self::INDEXER_STOP, self::INDEXER_CONTINUE];

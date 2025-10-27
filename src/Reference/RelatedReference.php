@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Hofff\Contao\Content\Reference;
 
 use Doctrine\DBAL\Connection;
+use Override;
 
 use function array_key_exists;
 use function sprintf;
@@ -19,6 +20,7 @@ abstract class RelatedReference implements Reference
     }
 
     /** {@inheritDoc} */
+    #[Override]
     public function backendLabel(array $row): string
     {
         $reference = $this->loadReference($row);

@@ -8,6 +8,7 @@ use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Doctrine\DBAL\Connection;
 use Hofff\Contao\Content\Renderer\Select;
 use Hofff\Contao\Content\Util\ContaoUtil;
+use Override;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Security as CoreSecurity;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -26,12 +27,14 @@ final class ArticleReference extends RelatedReference implements CreatesRenderer
         parent::__construct($connection);
     }
 
+    #[Override]
     public function name(): string
     {
         return 'article';
     }
 
     /** {@inheritDoc} */
+    #[Override]
     public function backendIcon(array $row): string
     {
         $reference = $this->loadReference($row);
@@ -43,6 +46,7 @@ final class ArticleReference extends RelatedReference implements CreatesRenderer
     }
 
     /** {@inheritDoc} */
+    #[Override]
     public function createSelect(array $config, int $index, string $column): Select
     {
         $articleId       = $config['article'];
@@ -70,6 +74,7 @@ SQL;
     }
 
     /** {@inheritDoc} */
+    #[Override]
     protected function backendLabelExtra(array $row, array $reference): string|null
     {
         $column = $reference['inColumn'];
@@ -83,11 +88,13 @@ SQL;
         return $column;
     }
 
+    #[Override]
     protected function labelColumn(): string
     {
         return 'title';
     }
 
+    #[Override]
     protected function referenceTable(): string
     {
         return 'tl_article';

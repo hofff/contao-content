@@ -7,6 +7,7 @@ namespace Hofff\Contao\Content\Action;
 use Contao\Model;
 use Contao\ModuleModel;
 use Contao\PageModel;
+use Override;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -27,6 +28,7 @@ final class ModuleReferencesAction extends ReferencesAction
     }
 
     /** @param array<string,mixed> $attributes */
+    #[Override]
     protected function loadModel(array $attributes): Model|null
     {
         if ($attributes['moduleModel'] instanceof ModuleModel) {

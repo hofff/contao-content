@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Hofff\Contao\Content\Renderer;
 
 use Hofff\Contao\Content\Util\ContaoUtil;
+use Override;
 
 use function trim;
 
@@ -28,36 +29,43 @@ abstract class AbstractRenderer implements Renderer
         $this->excludeFromSearch = false;
     }
 
+    #[Override]
     public function getColumn(): string
     {
         return $this->column;
     }
 
+    #[Override]
     public function setColumn(string $column): void
     {
         $this->column = $column;
     }
 
+    #[Override]
     public function getExcludeFromSearch(): bool
     {
         return $this->excludeFromSearch;
     }
 
+    #[Override]
     public function setExcludeFromSearch(bool $exclude): void
     {
         $this->excludeFromSearch = $exclude;
     }
 
+    #[Override]
     public function getCssClasses(): string|null
     {
         return $this->cssClasses;
     }
 
+    #[Override]
     public function setCssClasses(string|null $classes): void
     {
         $this->cssClasses = $classes === null || $classes === '' ? null : $classes;
     }
 
+    #[Override]
     public function addCssClasses(string|null $classes): void
     {
         if ($classes === null || $classes === '') {
@@ -73,16 +81,19 @@ abstract class AbstractRenderer implements Renderer
         $this->cssClasses .= ' ' . $classes;
     }
 
+    #[Override]
     public function getCssId(): string|null
     {
         return $this->cssId;
     }
 
+    #[Override]
     public function setCssId(string|null $cssId): void
     {
         $this->cssId = $cssId === null || $cssId === '' ? null : $cssId;
     }
 
+    #[Override]
     public function render(): string
     {
         if (! $this->isValid()) {
@@ -109,6 +120,7 @@ abstract class AbstractRenderer implements Renderer
         return $this->render();
     }
 
+    #[Override]
     public function isValid(): bool
     {
         return true;

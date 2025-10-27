@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hofff\Contao\Content\DependencyInjection;
 
+use Override;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
@@ -16,6 +17,7 @@ final class HofffContaoContentExtension extends Extension
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
+    #[Override]
     public function load(array $configs, ContainerBuilder $container): void
     {
         $loader = new XmlFileLoader(

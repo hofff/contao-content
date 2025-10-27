@@ -12,6 +12,7 @@ use Hofff\Contao\Content\Renderer\Select;
 use Hofff\Contao\Content\Util\LanguageRelationDetector;
 use Hofff\Contao\Content\Util\QueryUtil;
 use Hofff\Contao\LanguageRelations\LanguageRelations;
+use Override;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Security as CoreSecurity;
 
@@ -31,12 +32,14 @@ final class PageReference extends RelatedReference implements CreatesSelect, Cre
         parent::__construct($connection);
     }
 
+    #[Override]
     public function name(): string
     {
         return 'page';
     }
 
     /** {@inheritDoc} */
+    #[Override]
     public function backendIcon(array $row): string
     {
         $reference = $this->loadReference($row);
@@ -49,6 +52,7 @@ final class PageReference extends RelatedReference implements CreatesSelect, Cre
     }
 
     /** {@inheritDoc} */
+    #[Override]
     public function createSelect(array $config, int $index, string $column): Select
     {
         /** @psalm-suppress PossiblyUndefinedArrayOffset */
@@ -92,16 +96,19 @@ SQL;
         return new Select('page', $sql, $params);
     }
 
+    #[Override]
     public function orderClause(): string
     {
         return 'hofff_content_index, sorting';
     }
 
+    #[Override]
     protected function labelColumn(): string
     {
         return 'title';
     }
 
+    #[Override]
     protected function referenceTable(): string
     {
         return 'tl_page';

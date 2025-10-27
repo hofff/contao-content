@@ -11,6 +11,7 @@ use Doctrine\DBAL\Connection;
 use Hofff\Contao\Content\Renderer\ModuleRenderer;
 use Hofff\Contao\Content\Renderer\Renderer;
 use Hofff\Contao\Content\Renderer\Select;
+use Override;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class ModuleReference extends RelatedReference implements CreatesRenderer, CreatesSelect
@@ -25,18 +26,21 @@ final class ModuleReference extends RelatedReference implements CreatesRenderer,
         parent::__construct($connection);
     }
 
+    #[Override]
     public function name(): string
     {
         return 'module';
     }
 
     /** {@inheritDoc} */
+    #[Override]
     public function backendIcon(array $row): string
     {
         return 'modules.svg';
     }
 
     /** {@inheritDoc} */
+    #[Override]
     public function createRenderer(array $reference, array $config): Renderer
     {
         $module = Registry::getInstance()->fetch('tl_module', $reference['id']);
@@ -54,6 +58,7 @@ final class ModuleReference extends RelatedReference implements CreatesRenderer,
     }
 
     /** {@inheritDoc} */
+    #[Override]
     public function createSelect(array $config, int $index, string $column): Select
     {
         $moduleId = $config['module'];
@@ -73,6 +78,7 @@ SQL;
     }
 
     /** {@inheritDoc} */
+    #[Override]
     protected function backendLabelExtra(array $row, array $reference): string|null
     {
         $key   = 'FMD.' . $reference['type'] . '.0';
@@ -85,11 +91,13 @@ SQL;
         return $reference['type'];
     }
 
+    #[Override]
     protected function labelColumn(): string
     {
         return 'name';
     }
 
+    #[Override]
     protected function referenceTable(): string
     {
         return 'tl_module';

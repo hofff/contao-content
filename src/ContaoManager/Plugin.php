@@ -9,6 +9,7 @@ use Contao\ManagerPlugin\Bundle\BundlePluginInterface;
 use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
 use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
 use Hofff\Contao\Content\HofffContaoContentBundle;
+use Override;
 
 final class Plugin implements BundlePluginInterface
 {
@@ -17,6 +18,7 @@ final class Plugin implements BundlePluginInterface
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
+    #[Override]
     public function getBundles(ParserInterface $parser): array
     {
         return [

@@ -63,6 +63,7 @@ final class ModuleRenderer extends AbstractRenderer
             return false;
         }
 
+        /** @psalm-suppress RedundantCastGivenDocblockType */
         return (bool) $this->module->protected;
     }
 }

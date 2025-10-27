@@ -73,11 +73,11 @@ final class PageReference extends RelatedReference implements CreatesSelect, Cre
         }
 
         $sourceCondition = '';
-        $sourceSections  = StringUtil::deserialize($config['source_sections'], true);
+        $sourceSections  = array_values(StringUtil::deserialize($config['source_sections'], true));
         if ($sourceSections !== []) {
             $wildcards       = QueryUtil::wildcards($sourceSections);
             $sourceCondition = 'AND article.inColumn IN (' . $wildcards . ')';
-            $params          = array_values(array_merge($params, $sourceSections));
+            $params          = array_merge($params, $sourceSections);
         }
 
         $sql = <<<SQL

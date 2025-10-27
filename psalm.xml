@@ -7,17 +7,16 @@
     <issueHandlers>
         <DeprecatedClass>
             <errorLevel type="suppress">
-                <!-- We need a new major version to get rid of it -->
-                <referencedClass name="Contao\RequestToken"/>
                 <referencedClass name="Hofff\Contao\LanguageRelations\LanguageRelations"/>
+                <referencedClass name="Contao\Template"/>
+                <referencedClass name="Symfony\Component\Security\Core\Security"/>
             </errorLevel>
         </DeprecatedClass>
-        <InternalMethod>
+        <UndefinedClass>
             <errorLevel type="suppress">
-                <referencedMethod name="Contao\CoreBundle\Framework\Adapter::__call"/>
-                <referencedMethod name="Contao\CoreBundle\Framework\ContaoFramework::getAdapter"/>
+                <referencedClass name="Hofff\Contao\LanguageRelations\LanguageRelations"/>
             </errorLevel>
-        </InternalMethod>
+        </UndefinedClass>
     </issueHandlers>
 
     <universalObjectCrates>

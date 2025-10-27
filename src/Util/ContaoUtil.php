@@ -10,7 +10,6 @@ use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\Date;
 use Contao\FrontendTemplate;
 use Contao\Image;
-use Contao\RequestToken;
 use Contao\Template;
 use Contao\Widget;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -94,15 +93,15 @@ final class ContaoUtil
     }
 
     /**
+     * @deprecated
+     *
      * @param array<string,mixed> $query
      * @param array<int,string>   $label
      */
     public static function generateBackendIconLink(array $query, string $image, array $label): string
     {
         $title = sprintf($label[1], $query['id'] ?? $query['pn']);
-
-        $query['rt'] = RequestToken::get();
-        $query       = http_build_query($query, '', '&amp;');
+        $query = http_build_query($query, '', '&amp;');
 
         return sprintf(
             '<a href="contao?%s" title="%s" data-title="%s" class="hofff-content-edit">%s %s</a>',

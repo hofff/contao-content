@@ -5,6 +5,12 @@ phpcq:
     - src
   artifact: .phpcq/build
   plugins:
+    doctrine-coding-standard:
+      version: ^1.0
+      signed: false
+      requirements:
+        composer:
+          doctrine/coding-standard: ^13.0
     composer-normalize:
       version: ^1.0
       signed: false
@@ -40,6 +46,7 @@ phpcq:
     - 31C7E470E2138192
     - 5E6DDE998AB73B8E
     - A978220305CD5C32
+    - 97B02DD8E5071466
 tasks:
   fix:
     - composer-normalize-fix
@@ -80,14 +87,14 @@ tasks:
   phpcs:
     config:
       standard: ~
-      standard_paths:
-        - ./vendor/slevomat/coding-standard
-        - ./vendor/doctrine/coding-standard/lib
+    uses:
+      doctrine-coding-standard:
+        phpcs_standard: ignore
   phpcbf:
     plugin: phpcs
     config:
       standard: ~
-      standard_paths:
-        - ./vendor/slevomat/coding-standard
-        - ./vendor/doctrine/coding-standard/lib
       fix: true
+    uses:
+      doctrine-coding-standard:
+        phpcs_standard: ignore

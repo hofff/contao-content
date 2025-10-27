@@ -119,6 +119,7 @@ abstract class ReferencesAction implements FragmentPreHandlerInterface
             return;
         }
 
+        /** @psalm-suppress RedundantCastGivenDocblockType */
         $pageContext = ($this->pageContextFactory)((int) $pageModel->id);
         $this->pageContextInitializer->initialize($pageContext, $request);
     }
@@ -190,6 +191,7 @@ abstract class ReferencesAction implements FragmentPreHandlerInterface
     /** @SuppressWarnings(PHPMD.CyclomaticComplexity) */
     private function setCacheHeaders(Response $response, Model $model, PageModel|null $pageModel): void
     {
+        /** @psalm-suppress DocblockTypeContradiction */
         if (
             $model->hofff_content_bypass_cache
             || ! $pageModel
@@ -207,6 +209,7 @@ abstract class ReferencesAction implements FragmentPreHandlerInterface
 
         // Do not cache the response if a user is logged in or the page is protected
         // TODO: Add support for proxies so they can vary on member context
+        /** @psalm-suppress RedundantCastGivenDocblockType */
         if (
             (bool) $pageModel->protected
             || $this->tokenChecker->hasFrontendUser()
@@ -220,6 +223,7 @@ abstract class ReferencesAction implements FragmentPreHandlerInterface
         }
 
         if ($pageModel->clientCache > 0) {
+            /** @psalm-suppress RedundantCastGivenDocblockType */
             $response->setMaxAge((int) $pageModel->clientCache);
         }
 
@@ -227,6 +231,7 @@ abstract class ReferencesAction implements FragmentPreHandlerInterface
             return;
         }
 
+        /** @psalm-suppress RedundantCastGivenDocblockType */
         $response->setSharedMaxAge((int) $pageModel->cache);
     }
 

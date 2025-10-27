@@ -23,6 +23,7 @@ final class QueryUtil
     {
         $placeholders === null || $sql = vsprintf($sql, $placeholders);
 
+        /** @psalm-suppress TooManyArguments */
         return Database::getInstance()->prepare($sql)->execute($params);
     }
 

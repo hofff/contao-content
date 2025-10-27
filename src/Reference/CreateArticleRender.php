@@ -9,12 +9,16 @@ use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\Model\Registry;
 use Hofff\Contao\Content\Renderer\ArticleRenderer;
 use Hofff\Contao\Content\Renderer\Renderer;
+use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Security\Core\Security as CoreSecurity;
 
 trait CreateArticleRender
 {
     use ConfigureRenderer;
 
     private readonly TokenChecker $tokenChecker;
+
+    private readonly Security|CoreSecurity $security;
 
     /** {@inheritDoc} */
     public function createRenderer(array $reference, array $config): Renderer
@@ -25,7 +29,7 @@ trait CreateArticleRender
             $model->setRow($reference);
         }
 
-        $renderer = new ArticleRenderer($this->tokenChecker);
+        $renderer = new ArticleRenderer($this->tokenChecker, $this->security);
         $renderer->setArticle($model);
         $renderer->setRenderContainer($config['render_container']);
 

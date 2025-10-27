@@ -8,6 +8,8 @@ use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Doctrine\DBAL\Connection;
 use Hofff\Contao\Content\Renderer\Select;
 use Hofff\Contao\Content\Util\ContaoUtil;
+use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Security\Core\Security as CoreSecurity;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class ArticleReference extends RelatedReference implements CreatesRenderer, CreatesSelect
@@ -19,6 +21,7 @@ final class ArticleReference extends RelatedReference implements CreatesRenderer
         private readonly ContaoUtil $contaoUtil,
         private readonly TranslatorInterface $translator,
         private readonly TokenChecker $tokenChecker,
+        private readonly Security|CoreSecurity $security,
     ) {
         parent::__construct($connection);
     }

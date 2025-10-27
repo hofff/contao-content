@@ -6,15 +6,16 @@ namespace Hofff\Contao\Content\Renderer;
 
 use Contao\ArticleModel;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\Date;
-use Contao\FrontendUser;
 use Contao\ModuleArticle;
 use Contao\StringUtil;
 use Contao\System;
+use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Security\Core\Security as CoreSecurity;
 
 use function array_intersect;
 use function call_user_func;
-use function count;
 use function in_array;
 use function is_array;
 
@@ -24,8 +25,10 @@ final class ArticleRenderer extends AbstractRenderer
 
     private bool $renderContainer;
 
-    public function __construct(private readonly TokenChecker $tokenChecker)
-    {
+    public function __construct(
+        private readonly TokenChecker $tokenChecker,
+        private readonly CoreSecurity|Security $security,
+    ) {
         parent::__construct();
 
         $this->renderContainer = false;
@@ -77,18 +80,14 @@ final class ArticleRenderer extends AbstractRenderer
             return false;
         }
 
-        if ($this->article->protected) {
-            if (! $this->tokenChecker->isPreviewMode()) {
-                return false;
-            }
+        if (! $this->tokenChecker->isPreviewMode()) {
+            if ($this->article->protected) {
+                $groups = StringUtil::deserialize($this->article->groups, true);
 
-            $user = FrontendUser::getInstance();
-            if (! is_array($user->groups)) {
-                return false;
-            }
-
-            $groups = StringUtil::deserialize($this->article->groups);
-            if (empty($groups) || ! is_array($groups) || ! count(array_intersect($groups, $user->groups))) {
+                if (! $this->security->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, $groups)) {
+                    return false;
+                }
+            } elseif ($this->article->guests && ! $this->security->isGranted('ROLE_MEMBER')) {
                 return false;
             }
         }

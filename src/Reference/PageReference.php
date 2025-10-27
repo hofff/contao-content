@@ -12,6 +12,8 @@ use Hofff\Contao\Content\Renderer\Select;
 use Hofff\Contao\Content\Util\LanguageRelationDetector;
 use Hofff\Contao\Content\Util\QueryUtil;
 use Hofff\Contao\LanguageRelations\LanguageRelations;
+use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Security\Core\Security as CoreSecurity;
 
 use function array_merge;
 use function array_values;
@@ -24,6 +26,7 @@ final class PageReference extends RelatedReference implements CreatesSelect, Cre
         Connection $connection,
         private readonly LanguageRelationDetector $langRelationDetector,
         private readonly TokenChecker $tokenChecker,
+        private readonly Security|CoreSecurity $security,
     ) {
         parent::__construct($connection);
     }
